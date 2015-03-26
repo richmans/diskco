@@ -8,10 +8,8 @@ diskco.copy(offset, length=-1)
 # copy another 100 bytes (swapping the bytes)
 offset += 100
 diskco.copy(offset, length)
-
-# OR AUTOCLOSE????
 diskco.close()
 
 
-
+# or do everything in one command!
 diskco.copy_file("image.001", offset, length, "myfile.dd", byteswap=False, append=False)

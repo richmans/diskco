@@ -31,7 +31,7 @@ void Diskco::help() {
   printf("-q          Quiet, do not show progress\n");
   printf("-e          End offset in bytes\n");
   printf("-l          Length in bytes (specify either -l or -e)\n");
-  printf("-a          Append to target file\n");
+  printf("-s          Swap every two bytes\n");
   
   printf("\nNote: Anywhere you have an argument in bytes, you can use suffixes like k, m, g and t\n\n");
 }
