@@ -15,6 +15,7 @@ Options::Options(char* input, char* output, bool append, bool byteswap) {
 Options::Options(int argc, char* argv[]) {
   int option_character, option_index = 0;
   static struct option long_options[] = {
+    {"help", no_argument, 0, 'h'},
     {"offset", required_argument, 0, 'o'},
     {"block-size", required_argument, 0, 'b'},
     {"length", required_argument, 0, 'l'},
@@ -37,7 +38,7 @@ Options::Options(int argc, char* argv[]) {
   _length = -1;
   _end = 0;
   while (1) {
-    option_character = getopt_long(argc, argv, "o:b:l:e:sqa", long_options, &option_index);
+    option_character = getopt_long(argc, argv, "ho:b:l:e:sqa", long_options, &option_index);
     if( option_character == -1) break;
     switch(option_character) {
       case 'o':
@@ -62,6 +63,8 @@ Options::Options(int argc, char* argv[]) {
       case 'a':
         _append = true;
         break;
+      case 'h':
+        throw std::runtime_error("help");
       default:
         throw std::runtime_error("Invalid argument found");
     }

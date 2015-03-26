@@ -11,9 +11,29 @@ void Diskco::get_options(int argc, char* argv[]){
       exit(1);
     }
   } catch (std::runtime_error e) {
-    printf("ERROR: %s\n", e.what());
+    if(strcmp(e.what(), "help") == 0) {
+     help(); 
+    }else{
+      printf("ERROR: %s\n", e.what());
+    }
     exit(1);
   }
+}
+
+void Diskco::help() {
+  printf("Usage: diskco [options] source_file destination_file\n\n");
+  printf("\n");
+  printf("Options:\n");
+  printf("-h          Show this message\n");
+  printf("-o [bytes]  Source offset in bytes\n");
+  printf("-a          Append to target file instead of overwriting\n");
+  printf("-b [bytes]  Use blocksize (default 32765)\n");
+  printf("-q          Quiet, do not show progress\n");
+  printf("-e          End offset in bytes\n");
+  printf("-l          Length in bytes (specify either -l or -e)\n");
+  printf("-a          Append to target file\n");
+  
+  printf("\nNote: Anywhere you have an argument in bytes, you can use suffixes like k, m, g and t\n\n");
 }
 
 Diskco::Diskco(int argc, char* argv[]) {

@@ -21,6 +21,7 @@ public:
   ~Diskco();
   Diskco(int argc, char* argv[]);
   Diskco(char* input, char* output, bool append, bool byteswap);
+  void help();
   void set_swap_bytes(bool swap_bytes);
   void copy(int64_t offset, int64_t length);
   void close();
