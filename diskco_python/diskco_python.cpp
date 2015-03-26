@@ -1,4 +1,5 @@
 #include "Python.h"
+#include <stdio.h>
 #include "../Diskco/diskco.h"
 static PyObject *ErrorObject;
 
@@ -24,22 +25,32 @@ Diskco_dealloc(DiskcoObject *self)
 static PyObject *
 Diskco_copy(DiskcoObject *self, PyObject *args)
 {
-  int64_t offset, length;
-  if (!PyArg_ParseTuple(args, "LL:copy", &offset, &length))
+  try {
+    int64_t offset, length;
+    if (!PyArg_ParseTuple(args, "LL:copy", &offset, &length))
+      return NULL;
+    self->parent->copy(offset, length);
+    Py_INCREF(Py_None);
+    return Py_None;
+  }catch (std::runtime_error e) {
+    PyErr_SetString(PyExc_RuntimeError, e.what());
     return NULL;
-  self->parent->copy(offset, length);
-  Py_INCREF(Py_None);
-  return Py_None;
+  }
 }
 
 static PyObject *
 Diskco_close(DiskcoObject *self, PyObject *args)
 {
-  if (!PyArg_ParseTuple(args, ":close"))
+  try{
+    if (!PyArg_ParseTuple(args, ":close"))
+      return NULL;
+    self->parent->close();
+    Py_INCREF(Py_None);
+    return Py_None;
+  }catch (std::runtime_error e) {
+    PyErr_SetString(PyExc_RuntimeError, e.what());
     return NULL;
-  self->parent->close();
-  Py_INCREF(Py_None);
-  return Py_None;
+  }
 }
 
 
@@ -138,14 +149,19 @@ static PyTypeObject Diskco_Type = {
 static DiskcoObject *
 newDiskcoObject(char* input, char* output, bool append, bool swap_bytes)
 {
-  DiskcoObject *self;
-  self = PyObject_New(DiskcoObject, &Diskco_Type);
-  if (self == NULL)
+  try {
+    DiskcoObject *self;
+    self = PyObject_New(DiskcoObject, &Diskco_Type);
+    if (self == NULL)
+      return NULL;
+    self->parent = new Diskco(input, output, append, swap_bytes);
+    self->x_attr = NULL;
+    return self;
+  }catch (std::runtime_error e) {
+    PyErr_SetString(PyExc_RuntimeError, e.what());
     return NULL;
-  self->parent = new Diskco(input, output, append, swap_bytes);
-  self->x_attr = NULL;
-  return self;
-}
+  }
+} 
 
 
 /* Function of no arguments returning new Diskco object */
@@ -169,20 +185,25 @@ diskco_new(PyObject *self, PyObject *args, PyObject* keywds)
 static PyObject *
 diskco_copy_file(PyObject *self, PyObject *args, PyObject* keywds)
 {
-  int append = 0;
-  int swap_bytes = 0;
-  char *input, *output;
-  int64_t offset, length;
-  static char *kwlist[] = {(char*)"input", (char*)"offset", (char*)"length", (char*)"output",(char*)"append", (char*)"byteswap",NULL};
-  if (!PyArg_ParseTupleAndKeywords(args, keywds, "sLLs|$pp:copy_file", kwlist, &input, &offset, &length, &output, &append, &swap_bytes))
-    return NULL;
+  try {
+    int append = 0;
+    int swap_bytes = 0;
+    char *input, *output;
+    int64_t offset, length;
+    static char *kwlist[] = {(char*)"input", (char*)"offset", (char*)"length", (char*)"output",(char*)"append", (char*)"byteswap",NULL};
+    if (!PyArg_ParseTupleAndKeywords(args, keywds, "sLLs|$pp:copy_file", kwlist, &input, &offset, &length, &output, &append, &swap_bytes))
+      return NULL;
   
-  Diskco* diskco = new Diskco(input, output, append, swap_bytes);
-  diskco->copy(offset, length);
-  diskco->close();
-  delete diskco;
-  Py_INCREF(Py_None);
-  return Py_None;
+    Diskco* diskco = new Diskco(input, output, append, swap_bytes);
+    diskco->copy(offset, length);
+    diskco->close();
+    delete diskco;
+    Py_INCREF(Py_None);
+    return Py_None;
+  }catch (std::runtime_error e) {
+    PyErr_SetString(PyExc_RuntimeError, e.what());
+    return NULL;
+  }
 }
 
 /* List of functions defined in the module */
