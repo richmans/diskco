@@ -1,0 +1,96 @@
+#include "options.h"
+#include "diskco.h"
+using namespace std;
+
+void Diskco::get_options(int argc, char* argv[]){
+  try {
+    _options = new Options(argc, argv);
+    std::string err = _options->check_arguments();
+    if (err != "") {
+      printf("ERROR: %s\n", err.c_str());
+      exit(1);
+    }
+  } catch (std::runtime_error e) {
+    printf("ERROR: %s\n", e.what());
+    exit(1);
+  }
+}
+
+Diskco::Diskco(int argc, char* argv[]) {
+  get_options(argc, argv);
+  initialize();
+  
+}
+
+Diskco::Diskco(char* input, char* output, bool append, bool byteswap) {
+  _options = new Options(input, output, append, byteswap);
+  initialize();
+}
+
+
+
+Diskco::~Diskco() {
+  if(_options){
+    delete _options;
+  }
+  if(_buffer) {
+    delete _buffer;
+  }
+}
+
+void Diskco::initialize() {
+  _buffer= new Buffer(_options->block_size());
+  
+  _reader = new FileReader(_options);
+  _writer = new FileWriter(_options);
+  _swapper = new ByteSwapper(_options);
+}
+
+void Diskco::set_swap_bytes(bool swap_bytes){
+  _options->set_swap_bytes(swap_bytes);
+}
+
+void Diskco::close() {
+   _reader->close();
+   _writer->close();
+}
+
+void Diskco::copy(int64_t offset, int64_t length){
+  _options->set_offset(offset);
+  _options->set_length(length);
+  _reader->initialize();
+  run();
+}
+
+void Diskco::run() {
+  int result;
+  
+  bool enable_swapper = _options->swap_bytes();
+  while (1) {
+    result = _reader->process(_buffer);
+    if(result == -1) break;
+    if(enable_swapper){
+      _swapper->process(_buffer);
+    }
+    result = _writer->process(_buffer);
+    if(result == -1) break;
+  }
+}
+
+void Diskco::start(){
+  
+  try {
+    run();
+    close();
+  } catch (std::runtime_error e) {
+    printf("ERROR: %s\n", e.what());
+  }
+  printf("Thankyoubyebye\n");
+}
+
+
+int main(int argc, char* argv[]) {
+  Diskco diskco(argc, argv);
+  diskco.start();
+}
+  
