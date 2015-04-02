@@ -3,7 +3,7 @@
 int64_t bytesize(std::string input) {
   char multiplier;
   int64_t number;
-  sscanf(input.c_str(), "%llu%c", &number, &multiplier);
+  sscanf(input.c_str(), "%ld%c", &number, &multiplier);
   switch(multiplier) {
     case 'k':
     case 'K':
@@ -44,6 +44,6 @@ std::string pretty_bytes(int64_t bytes) {
     unit = "Tb";
     bytes = bytes >> 10;
   }
-  sprintf(result, "%lld %s", bytes, unit.c_str());
+  sprintf(result, "%ld %s", bytes, unit.c_str());
   return result;
 }

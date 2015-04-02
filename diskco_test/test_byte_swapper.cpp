@@ -1,4 +1,5 @@
 #include "catch.hpp"
+#include <utility>
 #include "testsuite.h"
 #include "options.h"
 #include "byte_swapper.h"
@@ -11,8 +12,7 @@ void prepare_buffer(Buffer* buffer) {
 }
 
 TEST_CASE("Testing byteswapper") {
- 
-  Options* options = parse_options(2, (const char*[]){ "dit", "dat"});
+  Options* options = parse_options(2, std::move((const char*[]){ "dit", "dat"}));
   ByteSwapper* swapper = new ByteSwapper(options);
   Buffer* buffer = new Buffer(512);
 

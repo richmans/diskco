@@ -1,15 +1,15 @@
 from distutils.core import setup, Extension
 diskco_module=Extension('diskco',
     sources= ['diskco_python.cpp',
-   '../Diskco/buffer.cpp',
-   '../Diskco/buffer_processor.cpp',
-   '../Diskco/byte_swapper.cpp',
-   '../Diskco/diskco.cpp',
-   '../Diskco/file_reader.cpp',
-   '../Diskco/file_writer.cpp',
-   '../Diskco/options.cpp',
-   '../Diskco/progress.cpp',
-   '../Diskco/utils.cpp'
+   '../diskco/buffer.cpp',
+   '../diskco/buffer_processor.cpp',
+   '../diskco/byte_swapper.cpp',
+   '../diskco/diskco.cpp',
+   '../diskco/file_reader.cpp',
+   '../diskco/file_writer.cpp',
+   '../diskco/options.cpp',
+   '../diskco/progress.cpp',
+   '../diskco/utils.cpp'
   ],
 )
 

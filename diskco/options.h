@@ -2,6 +2,7 @@
 #define OPTIONS_H
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdexcept>
 #include <string>
 #include <getopt.h>
 #include "utils.h"

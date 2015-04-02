@@ -1,6 +1,6 @@
 #include "Python.h"
 #include <stdio.h>
-#include "../Diskco/diskco.h"
+#include "../diskco/diskco.h"
 static PyObject *ErrorObject;
 
 typedef struct {

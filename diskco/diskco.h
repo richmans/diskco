@@ -1,6 +1,9 @@
 #ifndef DISCO_H
 #define DISCO_H
 #include <stdio.h>
+#include <stdint.h>
+#include <stdexcept>
+#include <string.h>
 #include "options.h"
 #include "buffer.h"
 #include "file_reader.h"
