@@ -1,7 +1,7 @@
 all: install
 	
 clean:
-	python setup.py clean
+	cd .. && python setup.py clean
 	
 install:
-	python3 setup.py install
+	cd .. && python3 setup.py install
