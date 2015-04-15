@@ -3,3 +3,5 @@ build
 *.gch
 *.o
 a.out
+*.egg-info
+*.so
