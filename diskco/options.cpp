@@ -23,7 +23,7 @@ Options::Options(int argc, char* argv[]) {
     {"swap-bytes", no_argument, 0, 's'},
     {"quiet", no_argument, 0, 'q'},
     {"append", no_argument, 0, 'a'},
-    
+    {"search-bytes", required_argument, 0, 'f'},
     {0,0,0,0}
   };
 
@@ -38,7 +38,7 @@ Options::Options(int argc, char* argv[]) {
   _length = -1;
   _end = 0;
   while (1) {
-    option_character = getopt_long(argc, argv, "ho:b:l:e:sqa", long_options, &option_index);
+    option_character = getopt_long(argc, argv, "ho:b:l:e:sqaf:", long_options, &option_index);
     if( option_character == -1) break;
     switch(option_character) {
       case 'o':
@@ -59,6 +59,9 @@ Options::Options(int argc, char* argv[]) {
         break;
       case 'q':
         _quiet = true;
+        break;
+      case 'f':
+        _search_bytes = optarg;
         break;
       case 'a':
         _append = true;
@@ -121,6 +124,7 @@ void Options::set_swap_bytes(bool swap_bytes) {
 /* Getters */
 std::string Options::input_filename() { return _input_filename; }
 std::string Options::output_filename(){ return _output_filename; }
+std::string Options::search_bytes(){ return _search_bytes; }
 int64_t Options::block_size() { return _block_size; }
 int64_t Options::offset() { return _offset; }
 int64_t Options::length() { return _length; }

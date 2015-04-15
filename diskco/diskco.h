@@ -9,7 +9,7 @@
 #include "file_reader.h"
 #include "file_writer.h"
 #include "byte_swapper.h"
-
+#include "searcher.h"
 class Diskco {
 private:
   void get_options(int argc, char* argv[]);

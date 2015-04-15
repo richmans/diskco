@@ -15,6 +15,7 @@ private:
   int64_t _length;
   int64_t _end;
   bool _swap_bytes;
+  std::string _search_bytes;
   bool _quiet;
   bool _append;
 public:
@@ -26,6 +27,7 @@ public:
   std::string check_arguments();
   std::string input_filename();
   std::string output_filename();
+  std::string search_bytes();
   int64_t block_size();
   int64_t offset();
   int64_t length();
