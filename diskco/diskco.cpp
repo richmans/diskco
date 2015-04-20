@@ -59,11 +59,17 @@ Diskco::~Diskco() {
 }
 
 void Diskco::initialize() {
-  _buffer= new Buffer(_options->block_size());
+  BufferProcessor* parent;
+  _pool = new BufferPool(256, _options->block_size());
+  _reader = new FileReader(_options, NULL, _pool);
+  parent = _reader;
+  if (_options->swap_bytes()) {
+    _swapper = new ByteSwapper(_options, _reader, _pool);
+    parent = _swapper;
+  }
   
-  _reader = new FileReader(_options);
-  _writer = new FileWriter(_options);
-  _swapper = new ByteSwapper(_options);
+  _writer = new FileWriter(_options, parent, _pool);
+
 }
 
 void Diskco::set_swap_bytes(bool swap_bytes){
@@ -83,17 +89,10 @@ void Diskco::copy(int64_t offset, int64_t length){
 }
 
 void Diskco::run() {
-  int result;
-  
-  bool enable_swapper = _options->swap_bytes();
+  Buffer* result;
   while (1) {
-    result = _reader->process(_buffer);
-    if(result == -1) break;
-    if(enable_swapper){
-      _swapper->process(_buffer);
-    }
-    result = _writer->process(_buffer);
-    if(result == -1) break;
+    result = _writer->next_buffer();
+    if(result == NULL) break;
   }
 }
 

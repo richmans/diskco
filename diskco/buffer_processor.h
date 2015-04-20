@@ -11,14 +11,17 @@
 
 #include <stdio.h>
 #include "options.h"
+#include "buffer_pool.h"
 #include "buffer.h"
 class BufferProcessor {
 protected:
   Options* _options;
+  BufferPool* _pool;
+  BufferProcessor* _parent;
 public:
-  BufferProcessor(Options* options);
-  int process(Buffer* buffer);
-  void close();
+  BufferProcessor(Options* options, BufferProcessor* parent, BufferPool* _pool);
+  virtual Buffer* next_buffer();
+  virtual void close();
 };
 
 #endif /* defined(__Diskco__BufferProcessor__) */

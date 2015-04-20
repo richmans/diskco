@@ -13,18 +13,28 @@
 #include <stdint.h>
 #include <stdexcept>
 #include "buffer_processor.h"
-
+#include "file_reader.h"
 class Searcher: public BufferProcessor {
 private:
-  FILE* _file;
+  int64_t _search_cursor;
+  Buffer* _current_input_buffer;
+  FileReader* _current_output_reader;
+  int64_t _current_input_size;
+  bool _reading_result;
   int _match_cursor;
   int _head_size;
+  
   const char* _match_bytes;
   int _match_size;
+  bool process_char(char input);
+  void fetch_next_buffer();
+  bool search_match();
+  bool search_match_in_buffer();
+  void setup_output_reader();
 public:
-  int process(Buffer* buffer);
+  Buffer* next_buffer();
   void close();
-  Searcher(Options* options);
+  Searcher(Options* options, BufferProcessor* parent, BufferPool* pool);
   ~Searcher();
   void initialize();
   

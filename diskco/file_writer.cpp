@@ -10,7 +10,7 @@
 
 
 
-FileWriter::FileWriter(Options* options) : BufferProcessor(options) {
+FileWriter::FileWriter(Options* options, BufferProcessor* parent, BufferPool* pool) : BufferProcessor(options, parent, pool) {
   std::string flags;
   if (_options->append()) {
     flags = "ab";
@@ -35,7 +35,10 @@ void FileWriter::close() {
   
 }
 
-int FileWriter::process(Buffer *buffer) {
+Buffer* FileWriter::next_buffer() {
+  Buffer* buffer = _parent->next_buffer();
+  if(buffer == NULL) return NULL;
   fwrite(buffer->buffer(), 1, buffer->size(), _file);
-  return 0;
+  _pool->release_buffer(buffer);
+  return buffer;
 }

@@ -24,6 +24,9 @@ Options::Options(int argc, char* argv[]) {
     {"quiet", no_argument, 0, 'q'},
     {"append", no_argument, 0, 'a'},
     {"search-bytes", required_argument, 0, 'f'},
+    {"segment_offset", required_argument, 0, 'O'},
+    {"segment_length", required_argument, 0, 'L'},
+    {"search-bytes", required_argument, 0, 'f'},
     {0,0,0,0}
   };
 
@@ -38,7 +41,7 @@ Options::Options(int argc, char* argv[]) {
   _length = -1;
   _end = 0;
   while (1) {
-    option_character = getopt_long(argc, argv, "ho:b:l:e:sqaf:", long_options, &option_index);
+    option_character = getopt_long(argc, argv, "ho:b:l:e:sqaf:O:L:", long_options, &option_index);
     if( option_character == -1) break;
     switch(option_character) {
       case 'o':
@@ -65,6 +68,12 @@ Options::Options(int argc, char* argv[]) {
         break;
       case 'a':
         _append = true;
+        break;
+      case 'O':
+        _segment_offset = bytesize(optarg);
+        break;
+      case 'L':
+        _segment_length = bytesize(optarg);
         break;
       case 'h':
         throw std::runtime_error("help");
@@ -128,6 +137,8 @@ std::string Options::search_bytes(){ return _search_bytes; }
 int64_t Options::block_size() { return _block_size; }
 int64_t Options::offset() { return _offset; }
 int64_t Options::length() { return _length; }
+int64_t Options::segment_offset() { return _segment_offset; }
+int64_t Options::segment_length() { return _segment_length; }
 bool Options::swap_bytes() { return _swap_bytes; }
 bool Options::quiet() { return _quiet; }
 bool Options::append() { return _append; }

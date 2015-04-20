@@ -18,6 +18,7 @@ private:
   FileReader *_reader;
   ByteSwapper *_swapper;
   FileWriter *_writer;
+  BufferPool* _pool;
   void run();
   void initialize();
 public:

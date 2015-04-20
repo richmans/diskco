@@ -23,11 +23,11 @@ private:
   FILE* _file;
   Progress* _progress;
 public:
-  int process(Buffer* buffer);
-  FileReader(Options* options);
+  Buffer* next_buffer();
+  FileReader(Options* options, BufferProcessor* parent, BufferPool* pool);
   ~FileReader();
   void close();
   void initialize();
-  
+  void initialize(int64_t offset, int64_t length);  
 };
 #endif /* defined(__Diskco__file_reader__) */

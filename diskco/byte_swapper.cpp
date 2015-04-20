@@ -7,10 +7,12 @@
 //
 
 #include "byte_swapper.h"
-ByteSwapper::ByteSwapper(Options* options) : BufferProcessor(options) {
+ByteSwapper::ByteSwapper(Options* options, BufferProcessor* parent, BufferPool* pool) : BufferProcessor(options, parent, pool) {
 }
 
-int ByteSwapper::process(Buffer *buffer) {
+Buffer* ByteSwapper::next_buffer() {
+  Buffer* buffer = _parent->next_buffer();
+  if(buffer == NULL) return NULL;
   char* data = buffer->buffer();
   char temp;
   for (int i=0; i < (buffer->size() -1) ; i+=2) {
@@ -18,5 +20,5 @@ int ByteSwapper::process(Buffer *buffer) {
     data[i] = data[i+1];
     data[i+1] = temp;
   }
-  return 0;
+  return buffer;
 }

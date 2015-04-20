@@ -14,7 +14,7 @@
 
 class ByteSwapper: public BufferProcessor {
 public:
-  ByteSwapper(Options* options);
-  int process(Buffer* buffer);
+  ByteSwapper(Options* options, BufferProcessor* parent, BufferPool* pool);
+  Buffer* next_buffer();
 };
 #endif /* defined(__Diskco__byte_swapper__) */

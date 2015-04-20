@@ -17,9 +17,9 @@ class FileWriter: public BufferProcessor {
 private:
   FILE* _file;
 public:
-  FileWriter(Options* options);
+  FileWriter(Options* options, BufferProcessor* parent, BufferPool* pool);
   ~FileWriter();
   void close();
-  int process(Buffer* buffer);
+  Buffer* next_buffer();
 };
 #endif /* defined(__Diskco__file_writer__) */

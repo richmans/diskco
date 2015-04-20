@@ -18,6 +18,8 @@ private:
   std::string _search_bytes;
   bool _quiet;
   bool _append;
+  int64_t _segment_offset;
+  int64_t _segment_length;
 public:
   Options(int argc, char* argv[]);
   Options(char* input, char* output, bool append, bool byteswap);
@@ -31,6 +33,8 @@ public:
   int64_t block_size();
   int64_t offset();
   int64_t length();
+  int64_t segment_offset();
+  int64_t segment_length();
   bool swap_bytes();
   bool quiet();
   bool append();

@@ -7,16 +7,19 @@
 //
 
 #include "buffer_processor.h"
-BufferProcessor::BufferProcessor(Options* options){
+BufferProcessor::BufferProcessor(Options* options, BufferProcessor* parent, BufferPool* pool){
   _options = options;
+  _parent = parent;
+  _pool = pool;
 }
 
 void BufferProcessor::close(){
   
 }
 
-// does work on a buffer
-// returns 0 if succesful, -1 if further processing should be stopped.
-int BufferProcessor::process(Buffer* buffer){
-  return 0;
+// returns the next output buffer, calls parent.next_buffer if necessary
+// returns NULL if no more data is available
+Buffer* BufferProcessor::next_buffer(){
+  printf("HALLO\n");
+  return NULL;
 }
