@@ -84,9 +84,7 @@ void Diskco::close() {
 }
 
 void Diskco::copy(int64_t offset, int64_t length){
-  _options->set_offset(offset);
-  _options->set_length(length);
-  _reader->initialize();
+  _reader->initialize(offset, length);
   run();
 }
 
