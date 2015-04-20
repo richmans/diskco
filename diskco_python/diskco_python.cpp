@@ -53,10 +53,52 @@ Diskco_close(DiskcoObject *self, PyObject *args)
   }
 }
 
+static PyObject *
+Diskco_search(DiskcoObject *self, PyObject *args)
+{
+  int64_t segment_offset, segment_length, offset, length;
+  char* search_bytes;
+  try{
+    if (!PyArg_ParseTuple(args, "sLLLL:search", &search_bytes, &offset, &length, &segment_offset, &segment_length))
+      return NULL;
+    self->parent->search(std::string(search_bytes), offset, length, segment_offset, segment_length);
+    Py_INCREF(Py_None);
+    return Py_None;
+  }catch (std::runtime_error e) {
+    PyErr_SetString(PyExc_RuntimeError, e.what());
+    return NULL;
+  }
+}
+
+static PyObject *
+Diskco_next_buffer(DiskcoObject *self, PyObject *args)
+{
+  Buffer* result;
+  try{
+    if (!PyArg_ParseTuple(args, ":next_buffer"))
+      return NULL;
+    result = self->parent->next_buffer();
+    
+    
+    
+    
+    Py_INCREF(Py_None);
+    return Py_None;
+  }catch (std::runtime_error e) {
+    PyErr_SetString(PyExc_RuntimeError, e.what());
+    return NULL;
+  }
+}
 
 static PyMethodDef Diskco_methods[] = {
   {"copy",            (PyCFunction)Diskco_copy,  METH_VARARGS,
     PyDoc_STR("copy(offset, length) -> Copy bytes from a certain offset")},
+  {"search",             (PyCFunction)Diskco_search,  METH_VARARGS,
+    PyDoc_STR("search(offset, length, pattern, segment_offset, segment_length) -> Configure object to search the input, for every match copy <segment_length> bytes at <segment_offset> bytes from the match.")},
+  {"next_buffer",             (PyCFunction)Diskco_next_buffer,  METH_VARARGS,
+    PyDoc_STR("next_buffer() -> returns processed data one block at a time.")},
+
+
   {"close",           (PyCFunction)Diskco_close, METH_VARARGS,
     PyDoc_STR("close() -> Close the files")},
   {NULL,              NULL}           /* sentinel */

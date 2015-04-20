@@ -132,15 +132,15 @@ void Options::set_swap_bytes(bool swap_bytes) {
   _swap_bytes = swap_bytes;
 }
 
-void set_search_bytes(std::string search_bytes) {
+void Options::set_search_bytes(std::string search_bytes) {
   _search_bytes = search_bytes;
 }
 
-void set_segment_offset(int64_t segment_offset) {
+void Options::set_segment_offset(int64_t segment_offset) {
   _segment_offset = segment_offset;
 }
 
-void set_segment_length(int64_t segment_offset) {
+void Options::set_segment_length(int64_t segment_length) {
   _segment_length = segment_length;
 }
 

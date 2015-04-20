@@ -19,6 +19,7 @@ private:
   Searcher *_searcher;
   FileWriter *_writer;
   BufferPool* _pool;
+  BufferProcessor* _chain_end;
   void run();
   void initialize();
   void rewire();
@@ -28,9 +29,10 @@ public:
   Diskco(char* input, char* output, bool append, bool byteswap);
   void help();
   void set_swap_bytes(bool swap_bytes);
-  void set_search(std::string search_bytes, int64_t segment_offset, int64_t segment_length);
+  void set_search(std::string search_bytes, int64_t offset, int64_t length, int64_t segment_offset, int64_t segment_length);
   void unset_search();
   void copy(int64_t offset, int64_t length);
+  Buffer* next_buffer();
   void close();
   void start();
 

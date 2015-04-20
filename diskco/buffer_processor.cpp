@@ -20,7 +20,6 @@ void BufferProcessor::close(){
 // returns the next output buffer, calls parent.next_buffer if necessary
 // returns NULL if no more data is available
 Buffer* BufferProcessor::next_buffer(){
-  printf("HALLO\n");
   return NULL;
 }
 

@@ -66,6 +66,10 @@ void Diskco::initialize() {
   rewire();
 }
 
+/* 
+Manipulates the parent of each buffer processor in the chain.
+This makes it possible to switch processors on and off.
+*/
 void Diskco::rewire() {
   BufferProcessor* parent = _reader;
   if (_options->swap_bytes()) {
@@ -76,12 +80,15 @@ void Diskco::rewire() {
     parent = _searcher;
   }
   _writer->set_parent(parent);
+  _chain_end = _writer;
 }
 
-void Diskco::set_search(std::string search_bytes, int64_t segment_offset, int64_t segment_length) {
+void Diskco::set_search(std::string search_bytes, int64_t offset, int64_t length, int64_t segment_offset, int64_t segment_length) {
+  _reader->initialize(offset, length);
   _options->set_search_bytes(search_bytes);
   _options->set_segment_offset(segment_offset);
   _options->set_segment_length(segment_length);
+  //TODO We need to reinitialize the searcher to do this
   rewire();
 }
 
@@ -105,10 +112,14 @@ void Diskco::copy(int64_t offset, int64_t length){
   run();
 }
 
+Buffer* Diskco::next_buffer() {
+  return _chain_end->next_buffer();
+}
+
 void Diskco::run() {
   Buffer* result;
   while (1) {
-    result = _writer->next_buffer();
+    result = _chain_end->next_buffer();
     if(result == NULL) break;
   }
 }
