@@ -29,10 +29,12 @@ void Diskco::help() {
   printf("-a          Append to target file instead of overwriting\n");
   printf("-b [bytes]  Use blocksize (default 32765)\n");
   printf("-q          Quiet, do not show progress\n");
-  printf("-e          End offset in bytes\n");
-  printf("-l          Length in bytes (specify either -l or -e)\n");
+  printf("-e [bytes]  End offset in bytes\n");
+  printf("-l [bytes]  Length in bytes (specify either -l or -e)\n");
   printf("-s          Swap every two bytes\n");
-  
+  printf("-f          Search for byte sequence\n");
+  printf("-O [bytes]  For each search match, start copying at offset\n");
+  printf("-L [bytes]  For each search match, copy amount of bytes\n");
   printf("\nNote: Anywhere you have an argument in bytes, you can use suffixes like k, m, g and t\n\n");
 }
 
