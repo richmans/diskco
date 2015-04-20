@@ -131,6 +131,19 @@ void Options::set_offset(int64_t offset) {
 void Options::set_swap_bytes(bool swap_bytes) {
   _swap_bytes = swap_bytes;
 }
+
+void set_search_bytes(std::string search_bytes) {
+  _search_bytes = search_bytes;
+}
+
+void set_segment_offset(int64_t segment_offset) {
+  _segment_offset = segment_offset;
+}
+
+void set_segment_length(int64_t segment_offset) {
+  _segment_length = segment_length;
+}
+
 /* Getters */
 std::string Options::input_filename() { return _input_filename; }
 std::string Options::output_filename(){ return _output_filename; }

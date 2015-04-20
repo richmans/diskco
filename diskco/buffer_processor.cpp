@@ -23,3 +23,7 @@ Buffer* BufferProcessor::next_buffer(){
   printf("HALLO\n");
   return NULL;
 }
+
+void BufferProcessor::set_parent(BufferProcessor* parent) {
+  _parent = parent;
+}

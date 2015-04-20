@@ -58,26 +58,41 @@ Diskco::~Diskco() {
 }
 
 void Diskco::initialize() {
-  BufferProcessor* parent;
   _pool = new BufferPool(256, _options->block_size());
   _reader = new FileReader(_options, NULL, _pool);
-  parent = _reader;
+  _swapper = new ByteSwapper(_options, _reader, _pool);
+  _searcher = new Searcher(_options, _swapper, _pool);
+  _writer = new FileWriter(_options, _searcher, _pool);
+  rewire();
+}
+
+void Diskco::rewire() {
+  BufferProcessor* parent = _reader;
   if (_options->swap_bytes()) {
-    _swapper = new ByteSwapper(_options, _reader, _pool);
     parent = _swapper;
   }
-  
   if (_options->search_bytes().length() != 0) {
-      _searcher = new Searcher(_options, parent, _pool);
-      parent = _searcher;
-    }
-  
-  _writer = new FileWriter(_options, parent, _pool);
+    _searcher->set_parent(parent);
+    parent = _searcher;
+  }
+  _writer->set_parent(parent);
+}
 
+void Diskco::set_search(std::string search_bytes, int64_t segment_offset, int64_t segment_length) {
+  _options->set_search_bytes(search_bytes);
+  _options->set_segment_offset(segment_offset);
+  _options->set_segment_length(segment_length);
+  rewire();
+}
+
+void Diskco::unset_search() {
+  _options->set_search_bytes("");
+  rewire();
 }
 
 void Diskco::set_swap_bytes(bool swap_bytes){
   _options->set_swap_bytes(swap_bytes);
+  rewire();
 }
 
 void Diskco::close() {
