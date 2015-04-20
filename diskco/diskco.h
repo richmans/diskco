@@ -14,9 +14,9 @@ class Diskco {
 private:
   void get_options(int argc, char* argv[]);
   Options *_options;
-  Buffer *_buffer;
   FileReader *_reader;
   ByteSwapper *_swapper;
+  Searcher *_searcher;
   FileWriter *_writer;
   BufferPool* _pool;
   void run();

@@ -9,9 +9,9 @@
 #include "searcher.h"
 Searcher::Searcher(Options* options, BufferProcessor* parent, BufferPool* pool) : BufferProcessor(options, parent, pool) {
   //TODO Convert from hex and calculate _head_size                     
-  _match_bytes = options->search_bytes().c_str(); 
-  _current_output_reader = new FileReader(_options, NULL, _pool); 
   initialize();
+  _match_bytes = options->search_bytes(); 
+  _match_size = _match_bytes.length();
 };
 
 void Searcher::close() {
@@ -23,6 +23,7 @@ void Searcher::close() {
 
 void Searcher::initialize() {
   _match_cursor = 0;
+  _match_size = 0;
   _search_cursor = 0;
   _current_input_buffer = NULL;
   _current_input_size = 0;
@@ -31,6 +32,7 @@ void Searcher::initialize() {
 }
 
 void Searcher::fetch_next_buffer() {
+  printf("Fetching buffer\n");
   if(_current_input_buffer != NULL) _pool->release_buffer(_current_input_buffer);
   _current_input_buffer = _parent->next_buffer();
   _search_cursor = int64_t(0);
@@ -44,20 +46,23 @@ Searcher::~Searcher() {
 }
 
 void Searcher::setup_output_reader() {
+  if(_current_output_reader == NULL) _current_output_reader = new FileReader(_options, NULL, _pool); 
   int64_t offset = _search_cursor + _options->segment_offset();
   _current_output_reader->initialize(offset, _options->segment_length());
   _reading_result = true;
 }
 
 bool Searcher::process_char(char input){
-  if(_match_bytes[_match_cursor] == input) {
+  if(_match_bytes.at(_match_cursor) == input) {
     _match_cursor += 1;
+    printf("Matching byte, cursor updated to %d (sz %d)\n ", _match_cursor, _match_size);
     if(_match_size == _match_cursor){
       _match_cursor = 0;
       setup_output_reader();
+      printf("Process char has a match\n");
       return true;
     }
-  } else if (_match_cursor > 0 && _match_cursor == _head_size && input  == _match_bytes[_match_cursor -1]) {
+  } else if (_match_cursor > 0 && _match_cursor == _head_size && input  == _match_bytes.at(_match_cursor -1)) {
     // sliding window
   }else{
     _match_cursor = 0;
@@ -88,13 +93,16 @@ bool Searcher::search_match(){
 }
 
 Buffer* Searcher::next_buffer() {
+  printf("Searcher action!\n");
   Buffer* buffer;
   if (_current_output_reader != NULL) {
     buffer = _current_output_reader->next_buffer();
     if(buffer != NULL) return buffer;
     _reading_result = false;
   }
+  printf("Done copying results, on to the next match\n");
   bool match_found = search_match();
   if (!match_found) return NULL;
+  printf("Found a match, starting result copy\n");
   return _current_output_reader->next_buffer();
 }

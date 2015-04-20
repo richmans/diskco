@@ -40,6 +40,7 @@ Options::Options(int argc, char* argv[]) {
   _block_size = 32768;
   _length = -1;
   _end = 0;
+  _search_bytes = "";
   while (1) {
     option_character = getopt_long(argc, argv, "ho:b:l:e:sqaf:O:L:", long_options, &option_index);
     if( option_character == -1) break;

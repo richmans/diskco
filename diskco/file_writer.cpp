@@ -38,6 +38,7 @@ void FileWriter::close() {
 Buffer* FileWriter::next_buffer() {
   Buffer* buffer = _parent->next_buffer();
   if(buffer == NULL) return NULL;
+  printf("Writing %lld bytes\n", buffer->size());
   fwrite(buffer->buffer(), 1, buffer->size(), _file);
   _pool->release_buffer(buffer);
   return buffer;

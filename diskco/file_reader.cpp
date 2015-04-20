@@ -31,6 +31,7 @@ void FileReader::initialize() {
 }
 
 void FileReader::initialize(int64_t offset, int64_t length){
+  printf("Initializing reader to offset %lld\n", offset);
   fseek(_file, offset, SEEK_SET);
   _cursor = offset;
   // if length is not set, read the entire file!
@@ -49,8 +50,10 @@ Buffer* FileReader::next_buffer() {
   Buffer* buffer= _pool->get_buffer();
   if(feof(_file) || _bytes_left == 0) return NULL;
   int64_t read_bytes = buffer->capacity();
+  
   if (_bytes_left < read_bytes) read_bytes = _bytes_left;
   size_t bytes_read = fread(buffer->buffer(), 1, read_bytes, _file);
+  printf("Read %lu bytes\n", bytes_read);
   buffer->set_size(bytes_read);
   _cursor += bytes_read;
   if (_bytes_left > 0) _bytes_left -= bytes_read;

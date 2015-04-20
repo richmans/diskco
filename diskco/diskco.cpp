@@ -53,9 +53,6 @@ Diskco::~Diskco() {
   if(_options){
     delete _options;
   }
-  if(_buffer) {
-    delete _buffer;
-  }
 }
 
 void Diskco::initialize() {
@@ -67,6 +64,11 @@ void Diskco::initialize() {
     _swapper = new ByteSwapper(_options, _reader, _pool);
     parent = _swapper;
   }
+  
+  if (_options->search_bytes().length() != 0) {
+      _searcher = new Searcher(_options, parent, _pool);
+      parent = _searcher;
+    }
   
   _writer = new FileWriter(_options, parent, _pool);
 

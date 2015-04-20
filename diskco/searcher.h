@@ -11,6 +11,7 @@
 
 #include <stdio.h>
 #include <stdint.h>
+#include <string>
 #include <stdexcept>
 #include "buffer_processor.h"
 #include "file_reader.h"
@@ -24,7 +25,7 @@ private:
   int _match_cursor;
   int _head_size;
   
-  const char* _match_bytes;
+  std::string _match_bytes;
   int _match_size;
   bool process_char(char input);
   void fetch_next_buffer();
