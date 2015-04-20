@@ -8,10 +8,8 @@
 
 #include "searcher.h"
 Searcher::Searcher(Options* options, BufferProcessor* parent, BufferPool* pool) : BufferProcessor(options, parent, pool) {
-  //TODO Convert from hex and calculate _head_size                     
+  //TODO Convert from hex and calculate _head_size
   initialize();
-  _match_bytes = options->search_bytes(); 
-  _match_size = _match_bytes.length();
 };
 
 void Searcher::close() {
@@ -23,12 +21,44 @@ void Searcher::close() {
 
 void Searcher::initialize() {
   _match_cursor = 0;
-  _match_size = 0;
   _search_cursor = 0;
   _current_input_buffer = NULL;
   _current_input_size = 0;
   _current_output_reader = NULL;
   _reading_result = false;
+
+  // TODO this length does not work given 0-bytes
+  _match_size = strlen(_options->search_bytes());
+  _match_bytes = new char[_match_size + 1];
+
+
+  strcpy(_match_bytes, _options->search_bytes());
+  // implements the KMP string searching algorithm
+  this->failure_function(_match_size);
+}
+
+void Searcher::failure_function(int size) {
+  _failure_map = new int[size];
+  int i = 1;
+  int j = 0;
+  while (i < size) {
+    if (_match_bytes[i] == _match_bytes[j]) {
+      // we have matched j + 1 characters
+      _failure_map[i] = j + 1;
+      i++;
+      j++;
+    } else if (j > 0) {
+      // j indexes just after a prefix that matches
+      j = _failure_map[j - 1];
+    } else {
+      _failure_map[i] = 0;
+      i++;
+    }
+  }
+
+  printf("KMP failure function: ");
+  for (int i = 0;i < size; i++) printf("%d ", _failure_map[i]);
+  printf("\n");
 }
 
 void Searcher::fetch_next_buffer() {
@@ -46,25 +76,28 @@ Searcher::~Searcher() {
 }
 
 void Searcher::setup_output_reader() {
-  if(_current_output_reader == NULL) _current_output_reader = new FileReader(_options, NULL, _pool); 
-  int64_t offset = _search_cursor + _options->segment_offset();
+  if(_current_output_reader == NULL) _current_output_reader = new FileReader(_options, NULL, _pool);
+  int64_t offset = _search_cursor - _match_size + _options->segment_offset() + 1;
   _current_output_reader->initialize(offset, _options->segment_length());
   _reading_result = true;
 }
 
 bool Searcher::process_char(char input){
-  if(_match_bytes.at(_match_cursor) == input) {
+  if(_match_bytes[_match_cursor] == input) {
     _match_cursor += 1;
     printf("Matching byte, cursor updated to %d (sz %d)\n ", _match_cursor, _match_size);
     if(_match_size == _match_cursor){
       _match_cursor = 0;
       setup_output_reader();
-      printf("Process char has a match\n");
+      printf("Process char has a match at %lld\n", _search_cursor - _match_size);
       return true;
     }
-  } else if (_match_cursor > 0 && _match_cursor == _head_size && input  == _match_bytes.at(_match_cursor -1)) {
-    // sliding window
-  }else{
+  } else if (_match_cursor > 0) {
+    //printf("Mismatch, reseting match cursor, updated from %d to %d on char: %c\n ", _match_cursor, _failure_map[_match_cursor - 1], input);
+    _match_cursor = _failure_map[_match_cursor - 1];
+    // reprocess the current position
+    return process_char(input);
+  } else {
     _match_cursor = 0;
   }
   return false;
@@ -75,21 +108,21 @@ bool Searcher::search_match_in_buffer(){
   char* data = _current_input_buffer->buffer();
   while(_current_input_buffer != NULL && _search_cursor < _current_input_size) {
     match_found = process_char(data[_search_cursor]);
-    if(match_found) return true;
     _search_cursor += 1;
+    if(match_found) break;
   }
-  return false;
+  return match_found;
 }
 
 bool Searcher::search_match(){
   bool match_found = false;
   if(_current_input_buffer == NULL) fetch_next_buffer();
-  while(_current_input_buffer != NULL) { 
+  while(_current_input_buffer != NULL) {
     match_found = search_match_in_buffer();
-    if(match_found) return true;
+    if(match_found) break;
     fetch_next_buffer();
   }
-  return false;
+  return match_found;
 }
 
 Buffer* Searcher::next_buffer() {

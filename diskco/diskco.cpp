@@ -12,7 +12,7 @@ void Diskco::get_options(int argc, char* argv[]){
     }
   } catch (std::runtime_error e) {
     if(strcmp(e.what(), "help") == 0) {
-     help(); 
+     help();
     }else{
       printf("ERROR: %s\n", e.what());
     }
@@ -32,7 +32,8 @@ void Diskco::help() {
   printf("-e [bytes]  End offset in bytes\n");
   printf("-l [bytes]  Length in bytes (specify either -l or -e)\n");
   printf("-s          Swap every two bytes\n");
-  printf("-f          Search for byte sequence\n");
+  printf("-c          Search for char sequence\n");
+  printf("-f          Search for byte sequence (enter as hex)\n");
   printf("-O [bytes]  For each search match, start copying at offset\n");
   printf("-L [bytes]  For each search match, copy amount of bytes\n");
   printf("\nNote: Anywhere you have an argument in bytes, you can use suffixes like k, m, g and t\n\n");
@@ -41,15 +42,13 @@ void Diskco::help() {
 Diskco::Diskco(int argc, char* argv[]) {
   get_options(argc, argv);
   initialize();
-  
+
 }
 
 Diskco::Diskco(char* input, char* output, bool append, bool byteswap) {
   _options = new Options(input, output, append, byteswap);
   initialize();
 }
-
-
 
 Diskco::~Diskco() {
   if(_options){
@@ -75,6 +74,7 @@ void Diskco::rewire() {
   if (_options->swap_bytes()) {
     parent = _swapper;
   }
+
   if (_options->search_bytes().length() != 0) {
     _searcher->set_parent(parent);
     parent = _searcher;
@@ -125,7 +125,7 @@ void Diskco::run() {
 }
 
 void Diskco::start(){
-  
+
   try {
     run();
     close();
@@ -140,4 +140,3 @@ int main(int argc, char* argv[]) {
   Diskco diskco(argc, argv);
   diskco.start();
 }
-  

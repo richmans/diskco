@@ -24,20 +24,22 @@ private:
   bool _reading_result;
   int _match_cursor;
   int _head_size;
-  
-  std::string _match_bytes;
+  int* _failure_map;
+
+  char* _match_bytes;
   int _match_size;
   bool process_char(char input);
   void fetch_next_buffer();
   bool search_match();
   bool search_match_in_buffer();
   void setup_output_reader();
+  void failure_function(int size);
 public:
   Buffer* next_buffer();
   void close();
   Searcher(Options* options, BufferProcessor* parent, BufferPool* pool);
   ~Searcher();
   void initialize();
-  
+
 };
 #endif /* defined(__Diskco__searcher__) */
