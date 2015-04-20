@@ -12,7 +12,7 @@ void Diskco::get_options(int argc, char* argv[]){
     }
   } catch (std::runtime_error e) {
     if(strcmp(e.what(), "help") == 0) {
-     help(); 
+     help();
     }else{
       printf("ERROR: %s\n", e.what());
     }
@@ -32,14 +32,14 @@ void Diskco::help() {
   printf("-e          End offset in bytes\n");
   printf("-l          Length in bytes (specify either -l or -e)\n");
   printf("-s          Swap every two bytes\n");
-  
+
   printf("\nNote: Anywhere you have an argument in bytes, you can use suffixes like k, m, g and t\n\n");
 }
 
 Diskco::Diskco(int argc, char* argv[]) {
   get_options(argc, argv);
   initialize();
-  
+
 }
 
 Diskco::Diskco(char* input, char* output, bool append, bool byteswap) {
@@ -64,12 +64,12 @@ void Diskco::initialize() {
     _swapper = new ByteSwapper(_options, _reader, _pool);
     parent = _swapper;
   }
-  
-  if (_options->search_bytes().length() != 0) {
+
+  if (strlen(_options->search_bytes()) != 0) {
       _searcher = new Searcher(_options, parent, _pool);
       parent = _searcher;
     }
-  
+
   _writer = new FileWriter(_options, parent, _pool);
 
 }
@@ -99,7 +99,7 @@ void Diskco::run() {
 }
 
 void Diskco::start(){
-  
+
   try {
     run();
     close();
@@ -114,4 +114,3 @@ int main(int argc, char* argv[]) {
   Diskco diskco(argc, argv);
   diskco.start();
 }
-  

@@ -4,8 +4,8 @@ Options::Options(char* input, char* output, bool append, bool byteswap) {
    _output_filename = output;
    _append = append;
    _swap_bytes = byteswap;
-   _quiet = true;   
-   
+   _quiet = true;
+
    _offset = 0;
    _block_size = 32768;
    _length = -1;
@@ -23,10 +23,10 @@ Options::Options(int argc, char* argv[]) {
     {"swap-bytes", no_argument, 0, 's'},
     {"quiet", no_argument, 0, 'q'},
     {"append", no_argument, 0, 'a'},
+    {"search-chars", required_argument, 0, 'c'},
     {"search-bytes", required_argument, 0, 'f'},
     {"segment_offset", required_argument, 0, 'O'},
     {"segment_length", required_argument, 0, 'L'},
-    {"search-bytes", required_argument, 0, 'f'},
     {0,0,0,0}
   };
 
@@ -40,13 +40,12 @@ Options::Options(int argc, char* argv[]) {
   _block_size = 32768;
   _length = -1;
   _end = 0;
-  _search_bytes = "";
+  _search_bytes = new char[0];
   while (1) {
-    option_character = getopt_long(argc, argv, "ho:b:l:e:sqaf:O:L:", long_options, &option_index);
+    option_character = getopt_long(argc, argv, "ho:b:l:e:sqac:f:O:L:", long_options, &option_index);
     if( option_character == -1) break;
     switch(option_character) {
       case 'o':
-
         _offset = bytesize(optarg);
         break;
       case 'b':
@@ -64,8 +63,15 @@ Options::Options(int argc, char* argv[]) {
       case 'q':
         _quiet = true;
         break;
+      case 'c':
+        _search_bytes = new char[strlen(optarg)+1];
+        strcpy(_search_bytes, optarg);
+        // TODO set length
+        break;
       case 'f':
-        _search_bytes = optarg;
+        // TODO break on odd length argument
+        _search_bytes = hextobytes(optarg);
+        // TODO set length
         break;
       case 'a':
         _append = true;
@@ -86,8 +92,8 @@ Options::Options(int argc, char* argv[]) {
   if (tailing_arguments !=2 ) throw std::runtime_error("Please provide input and output");
   _input_filename = argv[optind];
   _output_filename = argv[optind+1];
-  
- 
+
+
 }
 
 /* Checks if the passed arguments are valid */
@@ -99,7 +105,7 @@ std::string Options::check_arguments() {
     }
     _length = _end - _offset;
   }
-  
+
   if (_swap_bytes) {
     if (_block_size % 2 == 1) {
       return "You can only use swap-bytes with an even block size";
@@ -111,7 +117,7 @@ std::string Options::check_arguments() {
       printf("WARING: using swap-bytes at an odd offset. Are you sure this is what you want?\n");
     }
   }
-  
+
   if (_block_size < 64) {
     return "The minimum block-size is 64 bytes";
   }
@@ -134,7 +140,7 @@ void Options::set_swap_bytes(bool swap_bytes) {
 /* Getters */
 std::string Options::input_filename() { return _input_filename; }
 std::string Options::output_filename(){ return _output_filename; }
-std::string Options::search_bytes(){ return _search_bytes; }
+char* Options::search_bytes(){ return _search_bytes; }
 int64_t Options::block_size() { return _block_size; }
 int64_t Options::offset() { return _offset; }
 int64_t Options::length() { return _length; }

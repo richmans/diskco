@@ -25,6 +25,21 @@ int64_t bytesize(std::string input) {
   return number;
 }
 
+char* hextobytes(char* hex){
+  char* _search_bytes = new char[strlen(hex) / 2 + 1];
+  char* buffer = new char[3];
+  buffer[2] = 0;
+  int length = strlen(hex);
+  for (int i = 0; i < length - 1; i += 2) {
+    buffer[0] = hex[i];
+    buffer[1] = hex[i + 1];
+    _search_bytes[i/2] = (char)strtoul(buffer, NULL, 16);
+  }
+  _search_bytes[length / 2] = 0;
+
+  return _search_bytes;
+}
+
 std::string pretty_bytes(int64_t bytes) {
   char result[30];
   std::string unit = " b";
