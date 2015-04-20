@@ -21,12 +21,15 @@ private:
   BufferPool* _pool;
   void run();
   void initialize();
+  void rewire();
 public:
   ~Diskco();
   Diskco(int argc, char* argv[]);
   Diskco(char* input, char* output, bool append, bool byteswap);
   void help();
   void set_swap_bytes(bool swap_bytes);
+  void set_search(std::string search_bytes, int64_t segment_offset, int64_t segment_length);
+  void unset_search();
   void copy(int64_t offset, int64_t length);
   void close();
   void start();

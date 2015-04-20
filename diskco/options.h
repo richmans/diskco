@@ -26,6 +26,9 @@ public:
   void set_length(int64_t length);
   void set_offset(int64_t offset);
   void set_swap_bytes(bool swap_bytes);
+  void set_search_bytes(std::string search_bytes);
+  void set_segment_offset(int64_t segment_offset);
+  void set_segment_length(int64_t segment_offset);
   std::string check_arguments();
   std::string input_filename();
   std::string output_filename();
