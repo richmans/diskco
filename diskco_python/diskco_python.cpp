@@ -82,7 +82,7 @@ Diskco_next_buffer(DiskcoObject *self, PyObject *args)
       Py_INCREF(Py_None);
       return Py_None;
     }
-    PyObject *tuple = Py_BuildValue("(s#L)", result->buffer(), result->size(), result->source_offset());
+    PyObject *tuple = Py_BuildValue("(y#L)", result->buffer(), result->size(), result->source_offset());
     return tuple;
   }catch (std::runtime_error e) {
     PyErr_SetString(PyExc_RuntimeError, e.what());
