@@ -26,7 +26,7 @@ int64_t bytesize(std::string input) {
 }
 
 char* hextobytes(char* hex){
-  char* _search_bytes = new char[strlen(hex) / 2 + 1];
+  char* _search_bytes = new char[strlen(hex) / 2];
   char* buffer = new char[3];
   buffer[2] = 0;
   int length = strlen(hex);
@@ -35,7 +35,6 @@ char* hextobytes(char* hex){
     buffer[1] = hex[i + 1];
     _search_bytes[i/2] = (char)strtoul(buffer, NULL, 16);
   }
-  _search_bytes[length / 2] = 0;
 
   return _search_bytes;
 }

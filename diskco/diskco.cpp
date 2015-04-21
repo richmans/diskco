@@ -75,7 +75,7 @@ void Diskco::rewire() {
     parent = _swapper;
   }
 
-  if (_options->search_bytes().length() != 0) {
+  if (_options->search_bytes_length() != 0) {
     _searcher->set_parent(parent);
     parent = _searcher;
   }

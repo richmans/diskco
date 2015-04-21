@@ -64,14 +64,13 @@ Options::Options(int argc, char* argv[]) {
         _quiet = true;
         break;
       case 'c':
-        _search_bytes = new char[strlen(optarg)+1];
-        strcpy(_search_bytes, optarg);
-        // TODO set length
+        _search_bytes_length = strlen(optarg);
+        _search_bytes = new char[_search_bytes_length+1];
+        memcpy(_search_bytes, optarg, _search_bytes_length + 1);
         break;
       case 'f':
-        // TODO break on odd length argument
+        _search_bytes_length = strlen(optarg) / 2;
         _search_bytes = hextobytes(optarg);
-        // TODO set length
         break;
       case 'a':
         _append = true;
@@ -139,7 +138,10 @@ void Options::set_swap_bytes(bool swap_bytes) {
 }
 
 void Options::set_search_bytes(std::string search_bytes) {
-  _search_bytes = search_bytes;
+  _search_bytes_length = search_bytes.length();
+  _search_bytes = new char(_search_bytes_length);
+  memcpy(_search_bytes, search_bytes.c_str(), _search_bytes_length);
+
 }
 
 void Options::set_segment_offset(int64_t segment_offset) {
@@ -162,3 +164,4 @@ int64_t Options::segment_length() { return _segment_length; }
 bool Options::swap_bytes() { return _swap_bytes; }
 bool Options::quiet() { return _quiet; }
 bool Options::append() { return _append; }
+int Options::search_bytes_length() { return _search_bytes_length;}

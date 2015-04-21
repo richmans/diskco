@@ -16,6 +16,7 @@ private:
   int64_t _end;
   bool _swap_bytes;
   char* _search_bytes;
+  int _search_bytes_length;
   bool _quiet;
   bool _append;
   int64_t _segment_offset;
@@ -33,6 +34,7 @@ public:
   std::string input_filename();
   std::string output_filename();
   char* search_bytes();
+  int search_bytes_length();
   int64_t block_size();
   int64_t offset();
   int64_t length();
