@@ -88,7 +88,7 @@ void Diskco::set_search(std::string search_bytes, int64_t offset, int64_t length
   _options->set_search_bytes(search_bytes);
   _options->set_segment_offset(segment_offset);
   _options->set_segment_length(segment_length);
-  //TODO We need to reinitialize the searcher to do this
+  _searcher->initialize();
   rewire();
 }
 

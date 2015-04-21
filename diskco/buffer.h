@@ -16,10 +16,13 @@ private:
   char* _buffer;
   int64_t _size;
   int64_t _capacity;
+  int64_t _source_offset;
 public:
   Buffer(int64_t capacity);
   ~Buffer();
   void set_size(int64_t size);
+  void set_source_offset(int64_t source_offset);
+  int64_t source_offset();
   int64_t size();
   int64_t capacity();
   char* buffer();

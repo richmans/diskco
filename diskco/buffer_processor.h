@@ -22,6 +22,7 @@ public:
   BufferProcessor(Options* options, BufferProcessor* parent, BufferPool* _pool);
   virtual Buffer* next_buffer();
   virtual void close();
+  virtual int64_t cursor();
   void set_parent(BufferProcessor* parent);
 };
 

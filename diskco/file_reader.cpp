@@ -55,8 +55,13 @@ Buffer* FileReader::next_buffer() {
   size_t bytes_read = fread(buffer->buffer(), 1, read_bytes, _file);
   printf("Read %lu bytes\n", bytes_read);
   buffer->set_size(bytes_read);
+  buffer->set_source_offset(_cursor);
   _cursor += bytes_read;
   if (_bytes_left > 0) _bytes_left -= bytes_read;
   if (!_options->quiet()) _progress->update(_cursor);
   return buffer;
+}
+
+int64_t FileReader::cursor() { 
+  return _cursor;
 }

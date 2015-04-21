@@ -61,7 +61,7 @@ Diskco_search(DiskcoObject *self, PyObject *args)
   try{
     if (!PyArg_ParseTuple(args, "sLLLL:search", &search_bytes, &offset, &length, &segment_offset, &segment_length))
       return NULL;
-    self->parent->search(std::string(search_bytes), offset, length, segment_offset, segment_length);
+    self->parent->set_search(std::string(search_bytes), offset, length, segment_offset, segment_length);
     Py_INCREF(Py_None);
     return Py_None;
   }catch (std::runtime_error e) {
@@ -78,12 +78,12 @@ Diskco_next_buffer(DiskcoObject *self, PyObject *args)
     if (!PyArg_ParseTuple(args, ":next_buffer"))
       return NULL;
     result = self->parent->next_buffer();
-    
-    
-    
-    
-    Py_INCREF(Py_None);
-    return Py_None;
+    if (result == NULL) {
+      Py_INCREF(Py_None);
+      return Py_None;
+    }
+    PyObject *tuple = Py_BuildValue("(s#L)", result->buffer(), result->size(), result->source_offset());
+    return tuple;
   }catch (std::runtime_error e) {
     PyErr_SetString(PyExc_RuntimeError, e.what());
     return NULL;

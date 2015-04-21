@@ -23,6 +23,11 @@ Buffer* BufferProcessor::next_buffer(){
   return NULL;
 }
 
+int64_t BufferProcessor::cursor() {
+  if (_parent != NULL) return _parent->cursor();
+  return 0;
+}
+
 void BufferProcessor::set_parent(BufferProcessor* parent) {
   _parent = parent;
 }

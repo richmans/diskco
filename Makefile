@@ -8,3 +8,7 @@ test:
 	
 python:
 	cd diskco_python && $(MAKE)
+	
+clean:
+	rm -rf build
+	

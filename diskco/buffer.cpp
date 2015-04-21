@@ -32,3 +32,11 @@ int64_t Buffer::capacity(){
 char* Buffer::buffer() {
   return _buffer;
 }
+
+int64_t Buffer::source_offset() {
+  return _source_offset;
+}
+
+void Buffer::set_source_offset(int64_t source_offset){
+  _source_offset = source_offset;
+}

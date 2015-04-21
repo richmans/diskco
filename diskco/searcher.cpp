@@ -21,6 +21,7 @@ void Searcher::close() {
 void Searcher::initialize() {
   _match_cursor = 0;
   _search_cursor = 0;
+  if(_parent != NULL) _search_cursor = _parent->cursor();
   _current_input_buffer = NULL;
   _current_input_size = 0;
   _current_output_reader = NULL;

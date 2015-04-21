@@ -26,6 +26,7 @@ public:
   Buffer* next_buffer();
   FileReader(Options* options, BufferProcessor* parent, BufferPool* pool);
   ~FileReader();
+  int64_t cursor();
   void close();
   void initialize();
   void initialize(int64_t offset, int64_t length);  

@@ -9,6 +9,7 @@
 #include "file_reader.h"
 #include "file_writer.h"
 #include "byte_swapper.h"
+#include "buffer_pool.h"
 #include "searcher.h"
 class Diskco {
 private:
