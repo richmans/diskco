@@ -8,7 +8,6 @@
 
 #include "searcher.h"
 Searcher::Searcher(Options* options, BufferProcessor* parent, BufferPool* pool) : BufferProcessor(options, parent, pool) {
-  //TODO Convert from hex and calculate _head_size
   initialize();
 };
 
@@ -27,14 +26,13 @@ void Searcher::initialize() {
   _current_output_reader = NULL;
   _reading_result = false;
 
-  // TODO this length does not work given 0-bytes
-  _match_size = strlen(_options->search_bytes());
+  _match_size = _options->search_bytes_length();
   _match_bytes = new char[_match_size + 1];
 
 
-  strcpy(_match_bytes, _options->search_bytes());
+  memcpy(_match_bytes, _options->search_bytes(), _options->search_bytes_length());
   // implements the KMP string searching algorithm
-  this->failure_function(_match_size);
+  failure_function(_match_size);
 }
 
 void Searcher::failure_function(int size) {
