@@ -23,7 +23,6 @@ private:
   int64_t _current_input_size;
   bool _reading_result;
   int _match_cursor;
-  int _head_size;
   int* _failure_map;
 
   char* _match_bytes;

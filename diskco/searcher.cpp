@@ -30,10 +30,11 @@ void Searcher::initialize() {
   _match_size = _options->search_bytes_length();
   _match_bytes = new char[_match_size + 1];
 
-
-  memcpy(_match_bytes, _options->search_bytes(), _options->search_bytes_length());
-  // implements the KMP string searching algorithm
-  failure_function(_match_size);
+  if (_options->search_bytes_length() > 0) {
+    memcpy(_match_bytes, _options->search_bytes(), _options->search_bytes_length());
+    // implements the KMP string searching algorithm
+    failure_function(_match_size);
+  }
 }
 
 void Searcher::failure_function(int size) {
@@ -54,14 +55,9 @@ void Searcher::failure_function(int size) {
       i++;
     }
   }
-
-  printf("KMP failure function: ");
-  for (int i = 0;i < size; i++) printf("%d ", _failure_map[i]);
-  printf("\n");
 }
 
 void Searcher::fetch_next_buffer() {
-  printf("Fetching buffer\n");
   if(_current_input_buffer != NULL) _pool->release_buffer(_current_input_buffer);
   _current_input_buffer = _parent->next_buffer();
   _search_cursor = int64_t(0);
@@ -84,11 +80,9 @@ void Searcher::setup_output_reader() {
 bool Searcher::process_char(char input){
   if(_match_bytes[_match_cursor] == input) {
     _match_cursor += 1;
-    printf("Matching byte, cursor updated to %d (sz %d)\n ", _match_cursor, _match_size);
     if(_match_size == _match_cursor){
       _match_cursor = 0;
       setup_output_reader();
-      printf("Process char has a match at %lld\n", _search_cursor - _match_size);
       return true;
     }
   } else if (_match_cursor > 0) {
@@ -125,16 +119,13 @@ bool Searcher::search_match(){
 }
 
 Buffer* Searcher::next_buffer() {
-  printf("Searcher action!\n");
   Buffer* buffer;
   if (_current_output_reader != NULL) {
     buffer = _current_output_reader->next_buffer();
     if(buffer != NULL) return buffer;
     _reading_result = false;
   }
-  printf("Done copying results, on to the next match\n");
   bool match_found = search_match();
   if (!match_found) return NULL;
-  printf("Found a match, starting result copy\n");
   return _current_output_reader->next_buffer();
 }

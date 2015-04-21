@@ -5,6 +5,7 @@ Options::Options(char* input, char* output, bool append, bool byteswap) {
    _append = append;
    _swap_bytes = byteswap;
    _quiet = true;
+   _search_bytes_length = 0;
 
    _offset = 0;
    _block_size = 32768;
@@ -41,6 +42,7 @@ Options::Options(int argc, char* argv[]) {
   _length = -1;
   _end = 0;
   _search_bytes = new char[0];
+  _search_bytes_length = 0;
   while (1) {
     option_character = getopt_long(argc, argv, "ho:b:l:e:sqac:f:O:L:", long_options, &option_index);
     if( option_character == -1) break;
