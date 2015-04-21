@@ -36,6 +36,7 @@ private:
 public:
   Buffer* next_buffer();
   void close();
+  int64_t cursor();
   Searcher(Options* options, BufferProcessor* parent, BufferPool* pool);
   ~Searcher();
   void initialize();

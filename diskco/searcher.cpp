@@ -18,6 +18,12 @@ void Searcher::close() {
   }
 }
 
+int64_t Searcher::cursor() {
+  int64_t result = _search_cursor;
+  if(_current_input_buffer != NULL) result += _current_input_buffer->source_offset();
+  return result;
+}
+
 void Searcher::initialize() {
   _match_cursor = 0;
   _search_cursor = 0;
@@ -72,7 +78,7 @@ Searcher::~Searcher() {
 
 void Searcher::setup_output_reader() {
   if(_current_output_reader == NULL) _current_output_reader = new FileReader(_options, NULL, _pool);
-  int64_t offset = _search_cursor - _match_size + _options->segment_offset() + 1;
+  int64_t offset = cursor() - _match_size + _options->segment_offset() + 1;
   _current_output_reader->initialize(offset, _options->segment_length());
   _reading_result = true;
 }

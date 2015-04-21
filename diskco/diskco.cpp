@@ -59,9 +59,10 @@ Diskco::~Diskco() {
 void Diskco::initialize() {
   _pool = new BufferPool(256, _options->block_size());
   _reader = new FileReader(_options, NULL, _pool);
-  _swapper = new ByteSwapper(_options, _reader, _pool);
-  _searcher = new Searcher(_options, _swapper, _pool);
-  _writer = new FileWriter(_options, _searcher, _pool);
+  _searcher = new Searcher(_options, _reader, _pool);
+  _swapper = new ByteSwapper(_options, _searcher, _pool);
+  
+  _writer = new FileWriter(_options, _swapper, _pool);
   rewire();
 }
 
@@ -71,13 +72,15 @@ This makes it possible to switch processors on and off.
 */
 void Diskco::rewire() {
   BufferProcessor* parent = _reader;
-  if (_options->swap_bytes()) {
-    parent = _swapper;
-  }
+ 
 
   if (_options->search_bytes_length() != 0) {
     _searcher->set_parent(parent);
     parent = _searcher;
+  }
+  if (_options->swap_bytes()) {
+    _swapper->set_parent(parent);
+    parent = _swapper;
   }
   _writer->set_parent(parent);
   _chain_end = _writer;
