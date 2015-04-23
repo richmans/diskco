@@ -58,10 +58,11 @@ Diskco_search(DiskcoObject *self, PyObject *args)
 {
   int64_t segment_offset, segment_length, offset, length;
   char* search_bytes;
+  int search_length;
   try{
-    if (!PyArg_ParseTuple(args, "sLLLL:search", &search_bytes, &offset, &length, &segment_offset, &segment_length))
+    if (!PyArg_ParseTuple(args, "s#LLLL:search", &search_bytes, &search_length, &offset, &length, &segment_offset, &segment_length))
       return NULL;
-    self->parent->set_search(std::string(search_bytes), offset, length, segment_offset, segment_length);
+    self->parent->set_search(std::string(search_bytes, search_length), offset, length, segment_offset, segment_length);
     Py_INCREF(Py_None);
     return Py_None;
   }catch (std::runtime_error e) {
