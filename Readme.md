@@ -17,17 +17,25 @@ Next, simply use the `make` command to compile and install everything.
 ## Usage (cmd)
 
     Usage: diskco [options] source_file destination_file
+    
+    
     Options:
     -h          Show this message
     -o [bytes]  Source offset in bytes
     -a          Append to target file instead of overwriting
     -b [bytes]  Use blocksize (default 32765)
     -q          Quiet, do not show progress
-    -e          End offset in bytes
-    -l          Length in bytes (specify either -l or -e)
+    -e [bytes]  End offset in bytes
+    -l [bytes]  Length in bytes (specify either -l or -e)
     -s          Swap every two bytes
+    -c          Search for char sequence
+    -f          Search for byte sequence (enter as hex)
+    -O [bytes]  For each search match, start copying at offset
+    -L [bytes]  For each search match, copy amount of bytes
+    
     Note: Anywhere you have an argument in bytes, you can use suffixes like k, m, g and t
 
+ 
 Here are some examples:
 
 copy bytes 32766 to 32770 from input to output
