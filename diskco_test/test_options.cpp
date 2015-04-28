@@ -1,12 +1,6 @@
 #include "catch.hpp"
 #include "options.h"
-
-Options *parse_options(int argc, const char* args[]){
-  char* argv[argc+1];
-  argv[0] = (char*)("test");
-  for(int i=0; i<argc;i++) argv[i+1] = (char*) args[i];
-  return new Options(argc + 1, argv);
-}
+#include "testsuite.h"
 
 TEST_CASE("Testing options") {
   SECTION("Parse empty options") {

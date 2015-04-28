@@ -9,7 +9,10 @@
 #ifndef Diskco_testsuite_h
 #define Diskco_testsuite_h
 #include "options.h"
+#include <utility>
+#include "buffer.h"
 #include "mock_buffer_processor.h"
 Options *parse_options(int argc, const char* args[]);
 void prepare_buffer(Buffer* buffer);
+void mock_input_file(std::string file_name, int length);
 #endif
