@@ -11,4 +11,6 @@ python:
 	
 clean:
 	rm -rf build
-	
+	rm -rf diskco_python/a.out
+	rm -rf diskco_test/a.out
+	rm -rf diskco_test/catch.hpp.gch
