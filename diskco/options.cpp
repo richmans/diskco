@@ -15,6 +15,9 @@ Options::Options(char* input, char* output, bool append, bool byteswap) {
 
 Options::Options(int argc, char* argv[]) {
   int option_character, option_index = 0;
+  if(argc == 1) {
+    throw std::runtime_error("help");
+  }
   static struct option long_options[] = {
     {"help", no_argument, 0, 'h'},
     {"offset", required_argument, 0, 'o'},
