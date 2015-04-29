@@ -15,6 +15,9 @@ TEST_CASE("Testing options") {
     CHECK(options->swap_bytes() == false);
     CHECK(options->quiet() == false);
     CHECK(options->append() == false);
+    CHECK(options->search_bytes_length() == 0);
+    CHECK(options->segment_offset() == 0);
+    CHECK(options->segment_length() == 0);
     delete options;
   }
  
@@ -56,7 +59,31 @@ TEST_CASE("Testing options") {
     CHECK(options->append() == true);
     delete options;
   }
+  SECTION("Set the segment offset") {
+    Options* options = parse_options(4, std::move((const char*[]){"-O", "4", "dit", "dat"}));
+    CHECK(options->segment_offset() == 4);
+    delete options;
+  }
   
+  SECTION("Set the segment size") {
+    Options* options = parse_options(4, std::move((const char*[]){"-L", "41", "dit", "dat"}));
+    CHECK(options->segment_length() == 41);
+    delete options;
+  }
+  
+  SECTION("Set the search chars") {
+    Options* options = parse_options(4, std::move((const char*[]){"-c", "41", "dit", "dat"}));
+    CHECK(options->search_bytes_length() == 2);
+    CHECK(strcmp(options->search_bytes(), "41") == 0);
+    delete options;
+  }
+  
+  SECTION("Set the search bytes") {
+    Options* options = parse_options(4, std::move((const char*[]){"-f", "0000414243", "dit", "dat"}));
+    CHECK(options->search_bytes_length() == 5);
+    CHECK(memcmp(options->search_bytes(), "\x0\x0\x41\x42\x43", 3) == 0);
+    delete options;
+  }
   
   SECTION("Fail when end is before beginning"){
     Options* options = parse_options(6, std::move((const char*[]){"-o", "120", "-e", "100", "dit", "dat"}));
