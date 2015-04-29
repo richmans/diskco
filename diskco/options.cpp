@@ -6,7 +6,8 @@ Options::Options(char* input, char* output, bool append, bool byteswap) {
    _swap_bytes = byteswap;
    _quiet = true;
    _search_bytes_length = 0;
-
+   _segment_length = 0;
+   _segment_offset = 0;
    _offset = 0;
    _block_size = 32768;
    _length = -1;
@@ -42,6 +43,8 @@ Options::Options(int argc, char* argv[]) {
   _quiet = false;
   _append = false;
   _block_size = 32768;
+  _segment_length = 0;
+  _segment_offset = 0;
   _length = -1;
   _end = 0;
   _search_bytes = new char[0];
