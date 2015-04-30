@@ -16,6 +16,7 @@ Options::Options(char* input, char* output, bool append, bool byteswap) {
 
 Options::Options(int argc, char* argv[]) {
   int option_character, option_index = 0;
+  
   if(argc == 1) {
     throw std::runtime_error("help");
   }
@@ -77,6 +78,9 @@ Options::Options(int argc, char* argv[]) {
         memcpy(_search_bytes, optarg, _search_bytes_length + 1);
         break;
       case 'f':
+        if (strlen(optarg) % 2 != 0) {
+          throw std::runtime_error("Invalid hex value");
+        }
         _search_bytes_length = strlen(optarg) / 2;
         _search_bytes = hextobytes(optarg);
         break;
