@@ -33,12 +33,9 @@ build:
 	mkdir $(BUILD_DIR)
 	mkdir $(BUILD_DIR)/sut
 	
-$(EXECUTABLE): build catch $(SUT_OBJECTS) $(TEST_OBJECTS)
+$(EXECUTABLE): build $(SUT_OBJECTS) $(TEST_OBJECTS)
 	$(CC) $(SUT_OBJECTS) $(TEST_OBJECTS) -o $@
 
-catch: catch.hpp
-	$(CC) catch.hpp -o $(BUILD_DIR)/catch.hpp.gch
-	
 build/%.o: %.cpp
 	$(CC) $(CFLAGS) -I $(SUT_DIR) -I . -o $@ $<
 
