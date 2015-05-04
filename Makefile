@@ -1,13 +1,17 @@
-all: cmd python test
+all: compile python
 	
-cmd:
+compile:
 	cd diskco && $(MAKE)
+	cd diskco_test && $(MAKE)
 
 test:
-	cd diskco_test && $(MAKE)
+	cd diskco_test && $(MAKE) test
 	
 python:
 	cd diskco_python && $(MAKE)
+
+install: compile
+	cd diskco && $(MAKE) install
 	
 clean:
 	rm -rf diskco/build

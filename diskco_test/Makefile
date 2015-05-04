@@ -27,7 +27,7 @@ SUT_OBJECTS=$(patsubst $(SUT_DIR)/%.cpp, $(BUILD_DIR)/sut/%.o, $(SUT_SOURCES))
 TEST_OBJECTS=$(patsubst %.cpp, $(BUILD_DIR)/%.o, $(SOURCES))
 EXECUTABLE=build/test_diskco
 
-all: $(SOURCES) $(EXECUTABLE) run
+all: $(SOURCES) $(EXECUTABLE)
 
 build:
 	mkdir $(BUILD_DIR)
@@ -42,7 +42,7 @@ build/%.o: %.cpp
 build/sut/%.o: $(SUT_DIR)/%.cpp
 	$(CC) $(CFLAGS) -o $@ $<
 
-run: $(EXECUTABLE)
+test: $(EXECUTABLE)
 	$(EXECUTABLE)
 	
 clean: 

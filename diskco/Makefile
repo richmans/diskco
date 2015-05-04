@@ -16,7 +16,7 @@ OBJECTS=$(patsubst %.cpp, build/%.o, $(SOURCES))
 #OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=build/diskco
 
-all: $(SOURCES) $(EXECUTABLE) install
+all: $(SOURCES) $(EXECUTABLE)
 
 build:
 	mkdir build
