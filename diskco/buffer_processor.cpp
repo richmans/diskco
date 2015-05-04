@@ -13,6 +13,10 @@ BufferProcessor::BufferProcessor(Options* options, BufferProcessor* parent, Buff
   _pool = pool;
 }
 
+BufferProcessor::~BufferProcessor(){
+  
+}
+
 void BufferProcessor::close(){
   
 }

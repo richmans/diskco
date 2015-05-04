@@ -23,6 +23,7 @@ public:
   virtual Buffer* next_buffer();
   virtual void close();
   virtual int64_t cursor();
+  virtual ~BufferProcessor();
   void set_parent(BufferProcessor* parent);
 };
 
