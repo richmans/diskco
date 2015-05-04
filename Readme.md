@@ -1,5 +1,7 @@
 # Disk Copier (Diskco)
 
+[![Build Status](https://travis-ci.org/richmans/diskco.svg?branch=master)](https://travis-ci.org/richmans/diskco)
+
 Diskco was built out of frustration with the dd program. I needed to copy parts of a large file out at different offsets. DD can do this, but you can only define the offset in blocks. The only way to use an arbitrary offset is to set the blocksize to 1, which makes it very slow.
 
 So what i needed was a program that can copy large amounts of data like dd at any offset while still using a larger blocksize. This is what diskco does.
