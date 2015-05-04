@@ -13,7 +13,7 @@ TEST_CASE("Testing utils") {
         CHECK(bytesize("1t") == int64_t(1024)*1024*1024*1024);
         CHECK(bytesize("1T") == int64_t(1024)*1024*1024*1024);
     }
-  
+
   SECTION("pretty_byte") {
     INFO("Converting number of bytes to pretty text")
     CHECK(pretty_bytes(1) == "1  b");
@@ -22,5 +22,12 @@ TEST_CASE("Testing utils") {
     CHECK(pretty_bytes(1024*1024) == "1 Mb");
     CHECK(pretty_bytes(1024*1024*1024) == "1 Gb");
     CHECK(pretty_bytes(int64_t(1024)*1024*1024*1024) == "1 Tb");
+  }
+
+  SECTION("hextobytes") {
+    INFO("Converting hexadecimal to bytes")
+    CHECK(std::strcmp(hextobytes("00"),"\x0") == 0);
+    CHECK(std::strcmp(hextobytes("20"), " ") == 0);
+    CHECK(std::strcmp(hextobytes("7454455354"), "tTEST") == 0);
   }
 }

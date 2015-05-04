@@ -31,7 +31,7 @@ private:
   void fetch_next_buffer();
   bool search_match();
   bool search_match_in_buffer();
-  void setup_output_reader();
+  void setup_output_reader(int64_t offset);
   void failure_function(int size);
 public:
   Buffer* next_buffer();
