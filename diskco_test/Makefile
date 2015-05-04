@@ -16,6 +16,7 @@ SOURCES=mock_buffer_processor.cpp \
 				test_file_writer.cpp \
 				test_options.cpp \
 				test_utils.cpp \
+				test_searcher.cpp \
 				test.cpp
 				
 CFLAGS=-c -Wall		
