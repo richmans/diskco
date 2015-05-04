@@ -85,7 +85,7 @@ TEST_CASE("Testing options") {
     const char* args[] = {"-c", "41", "dit", "dat"};
     Options* options = parse_options(4, args);
     CHECK(options->search_bytes_length() == 2);
-    CHECK(strcmp(options->search_bytes(), "41") == 0);
+    CHECK(memcmp(options->search_bytes(), "41", 2) == 0);
     delete options;
   }
   

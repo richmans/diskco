@@ -26,8 +26,8 @@ TEST_CASE("Testing utils") {
 
   SECTION("hextobytes") {
     INFO("Converting hexadecimal to bytes")
-    CHECK(std::strcmp(hextobytes("00"),"\x0") == 0);
-    CHECK(std::strcmp(hextobytes("20"), " ") == 0);
-    CHECK(std::strcmp(hextobytes("7454455354"), "tTEST") == 0);
+    CHECK(std::memcmp(hextobytes("00"),"\x0", 1) == 0);
+    CHECK(std::memcmp(hextobytes("20"), " ",1) == 0);
+    CHECK(std::memcmp(hextobytes("7454455354"), "tTEST", 5) == 0);
   }
 }
