@@ -13,6 +13,7 @@
 #include "buffer.h"
 #include "buffer_processor.h"
 #include "buffer_pool.h"
+#include "testsuite.h"
 
 class MockBufferProcessor: public BufferProcessor {
 private:

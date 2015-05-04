@@ -5,9 +5,12 @@
 #include "byte_swapper.h"
 #include "buffer_pool.h"
 
+using namespace std;
+
 TEST_CASE("Testing byteswapper") {
   BufferPool* pool = new BufferPool(256,512);
-  Options* options = parse_options(2, std::move((const char*[]){ "dit", "dat"}));
+  const char* args[] = {"dit", "dat"};
+  Options* options = parse_options(2, args);
   MockBufferProcessor* parent = new MockBufferProcessor(options, pool, 0);
   ByteSwapper* swapper = new ByteSwapper(options, parent, pool);
   Buffer* buffer = pool->get_buffer();

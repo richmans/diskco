@@ -16,8 +16,11 @@ Buffer* MockBufferProcessor::next_buffer() {
   
   if (_buffer_generator == 0) {
     buffer = _pool->get_buffer();
-  } else {
+  } else if (_buffer_generator == 1) {
     buffer = _instant_buffer;
+  } else {
+    buffer = _pool->get_buffer();
+    prepare_buffer(buffer);
   }
   
   return buffer;
