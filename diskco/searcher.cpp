@@ -47,6 +47,7 @@ void Searcher::failure_function(int size) {
   _failure_map = new int[size];
   int i = 1;
   int j = 0;
+  _failure_map[0] = 0;
   while (i < size) {
     if (_match_bytes[i] == _match_bytes[j]) {
       // we have matched j + 1 characters
@@ -95,7 +96,7 @@ bool Searcher::process_char(char input){
 
       return true;
     }
-  } else if (_match_cursor > 0) {
+  } else if (_match_cursor > 1) {
     //printf("Mismatch, reseting match cursor, updated from %d to %d on char: %c\n ", _match_cursor, _failure_map[_match_cursor - 1], input);
     _match_cursor = _failure_map[_match_cursor - 1];
     // reprocess the current position
