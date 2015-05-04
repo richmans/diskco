@@ -5,6 +5,7 @@
 #include <stdexcept>
 #include <string>
 #include <getopt.h>
+#include <cstring>
 #include "utils.h"
 class Options {
 private:

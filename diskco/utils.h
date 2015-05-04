@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <cstring>
 int64_t bytesize(std::string input);
 char* hextobytes(const char* hex);
 std::string pretty_bytes(int64_t bytes);
