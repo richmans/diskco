@@ -34,7 +34,7 @@ void Searcher::initialize() {
   _reading_result = false;
 
   _match_size = _options->search_bytes_length();
-  _match_bytes = new char[_match_size + 1];
+  _match_bytes = new char[_match_size];
 
   if (_options->search_bytes_length() > 0) {
     memcpy(_match_bytes, _options->search_bytes(), _options->search_bytes_length());
@@ -76,9 +76,8 @@ Searcher::~Searcher() {
   this->close();
 }
 
-void Searcher::setup_output_reader() {
+void Searcher::setup_output_reader(int64_t offset) {
   if(_current_output_reader == NULL) _current_output_reader = new FileReader(_options, NULL, _pool);
-  int64_t offset = cursor() - _match_size + _options->segment_offset() + 1;
   _current_output_reader->initialize(offset, _options->segment_length());
   _reading_result = true;
 }
@@ -88,7 +87,12 @@ bool Searcher::process_char(char input){
     _match_cursor += 1;
     if(_match_size == _match_cursor){
       _match_cursor = 0;
-      setup_output_reader();
+      int64_t offset = cursor() - _match_size + _options->segment_offset() + 1;
+
+      setup_output_reader(offset);
+
+      if (!_options->quiet()) printf("\rFound a match at: %lld\n", offset);
+
       return true;
     }
   } else if (_match_cursor > 0) {

@@ -70,8 +70,8 @@ Options::Options(int argc, char* argv[]) {
         break;
       case 'c':
         _search_bytes_length = strlen(optarg);
-        _search_bytes = new char[_search_bytes_length+1];
-        memcpy(_search_bytes, optarg, _search_bytes_length + 1);
+        _search_bytes = new char[_search_bytes_length];
+        memcpy(_search_bytes, optarg, _search_bytes_length);
         break;
       case 'f':
         _search_bytes_length = strlen(optarg) / 2;
@@ -146,7 +146,6 @@ void Options::set_search_bytes(std::string search_bytes) {
   _search_bytes_length = search_bytes.length();
   _search_bytes = new char(_search_bytes_length);
   memcpy(_search_bytes, search_bytes.c_str(), _search_bytes_length);
-
 }
 
 void Options::set_segment_offset(int64_t segment_offset) {
