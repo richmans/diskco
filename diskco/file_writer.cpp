@@ -39,6 +39,5 @@ Buffer* FileWriter::next_buffer() {
   Buffer* buffer = _parent->next_buffer();
   if(buffer == NULL) return NULL;
   fwrite(buffer->buffer(), 1, buffer->size(), _file);
-  _pool->release_buffer(buffer);
   return buffer;
 }

@@ -37,3 +37,9 @@ void BufferPool::release_buffer(Buffer* buffer){
   }
 }
 
+BufferPool::~BufferPool(){
+  for(int i=0;i<_buffer_count;i++) {
+    delete _pool[i];
+  }
+}
+

@@ -8,7 +8,7 @@ public:
   Buffer* get_buffer();
   void release_buffer(Buffer* buffer);
   BufferPool(int poolsize, int64_t buffer_size);  
-
+  ~BufferPool();
 private:
   static BufferPool* m_pInstance;
   Buffer** _pool;

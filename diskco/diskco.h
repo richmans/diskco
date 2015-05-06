@@ -34,6 +34,7 @@ public:
   void unset_search();
   void copy(int64_t offset, int64_t length);
   Buffer* next_buffer();
+  void release_buffer(Buffer* buffer);
   void close();
   void start();
 

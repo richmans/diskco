@@ -119,11 +119,16 @@ Buffer* Diskco::next_buffer() {
   return _chain_end->next_buffer();
 }
 
+void Diskco::release_buffer(Buffer* buffer) {
+  _pool->release_buffer(buffer);
+}
+
 void Diskco::run() {
   Buffer* result;
   while (1) {
     result = _chain_end->next_buffer();
     if(result == NULL) break;
+    _pool->release_buffer(result);
   }
 }
 

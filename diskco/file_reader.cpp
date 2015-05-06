@@ -46,8 +46,8 @@ FileReader::~FileReader() {
 }
 
 Buffer* FileReader::next_buffer() {
-  Buffer* buffer= _pool->get_buffer();
   if(feof(_file) || _bytes_left == 0) return NULL;
+  Buffer* buffer= _pool->get_buffer();
   int64_t read_bytes = buffer->capacity();
   
   if (_bytes_left < read_bytes) read_bytes = _bytes_left;
