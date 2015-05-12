@@ -24,18 +24,22 @@ void Diskco::help() {
   printf("Usage: diskco [options] source_file destination_file\n\n");
   printf("\n");
   printf("Options:\n");
-  printf("-h          Show this message\n");
-  printf("-o [bytes]  Source offset in bytes\n");
-  printf("-a          Append to target file instead of overwriting\n");
-  printf("-b [bytes]  Use blocksize (default 32765)\n");
-  printf("-q          Quiet, do not show progress\n");
-  printf("-e [bytes]  End offset in bytes\n");
-  printf("-l [bytes]  Length in bytes (specify either -l or -e)\n");
-  printf("-s          Swap every two bytes\n");
-  printf("-c          Search for char sequence\n");
-  printf("-f          Search for byte sequence (enter as hex)\n");
-  printf("-O [bytes]  For each search match, start copying at offset\n");
-  printf("-L [bytes]  For each search match, copy amount of bytes\n");
+  printf("-h              Show this message\n");
+  printf("-o [bytes]      Source offset in bytes\n");
+  printf("-a              Append to target file instead of overwriting\n");
+  printf("-b [bytes]      Blocksize used for reading (default 32765)\n");
+  printf("-q              Quiet, do not show progress\n");
+  printf("-e [bytes]      End offset in bytes\n");
+  printf("-l [bytes]      Length in bytes (specify either -l or -e)\n");
+  printf("-s              Swap every two bytes\n");
+  printf("-c              Search for char sequence\n");
+  printf("-f              Search for byte sequence (enter as hex)\n");
+  printf("-O [bytes]      For each search match, start copying at offset\n");
+  printf("-L [bytes]      For each search match, copy amount of bytes\n");
+  printf("-S [blocks]     Sample only every X rows, skipping X-1 rows.\n");
+  printf("-E [log|nulls]  Calculate the entropy using the normal logarithmic algoritm\n");
+  printf("                or base the result on the ratio between 0-bytes and other data.\n");
+  printf("-B [bytes]      Blocksize used for processing (default 512).\n");
   printf("\nNote: Anywhere you have an argument in bytes, you can use suffixes like k, m, g and t\n\n");
 }
 
@@ -61,18 +65,19 @@ void Diskco::initialize() {
   _reader = new FileReader(_options, NULL, _pool);
   _searcher = new Searcher(_options, _reader, _pool);
   _swapper = new ByteSwapper(_options, _searcher, _pool);
-  
+  _entropy = new EntropyMapper(_options, _searcher, _pool);
+
   _writer = new FileWriter(_options, _swapper, _pool);
   rewire();
 }
 
-/* 
+/*
 Manipulates the parent of each buffer processor in the chain.
 This makes it possible to switch processors on and off.
 */
 void Diskco::rewire() {
   BufferProcessor* parent = _reader;
- 
+
 
   if (_options->search_bytes_length() != 0) {
     _searcher->set_parent(parent);
@@ -82,6 +87,11 @@ void Diskco::rewire() {
     _swapper->set_parent(parent);
     parent = _swapper;
   }
+  if (_options->entropy_algorithm() > none) {
+    _entropy->set_parent(parent);
+    parent = _entropy;
+  }
+
   _writer->set_parent(parent);
   _chain_end = _writer;
 }

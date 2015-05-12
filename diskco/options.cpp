@@ -1,22 +1,29 @@
 #include "options.h"
+
+#define DEFAULT_BLOCK_SIZE 32768
+#define DEFAULT_PROCESSING_BLOCK_SIZE 512
+
 Options::Options(char* input, char* output, bool append, bool byteswap) {
    _input_filename = input;
    _output_filename = output;
    _append = append;
    _swap_bytes = byteswap;
    _quiet = true;
+   _entropy_algorithm = none;
    _search_bytes_length = 0;
    _segment_length = 0;
    _segment_offset = 0;
    _offset = 0;
-   _block_size = 32768;
+   _block_size = DEFAULT_BLOCK_SIZE;
+   _processing_block_size = DEFAULT_PROCESSING_BLOCK_SIZE;
+   _sample_blocks = 1;
    _length = -1;
    _end = 0;
 }
 
 Options::Options(int argc, char* argv[]) {
   int option_character, option_index = 0;
-  
+
   if(argc == 1) {
     throw std::runtime_error("help");
   }
@@ -31,8 +38,11 @@ Options::Options(int argc, char* argv[]) {
     {"append", no_argument, 0, 'a'},
     {"search-chars", required_argument, 0, 'c'},
     {"search-bytes", required_argument, 0, 'f'},
-    {"segment_offset", required_argument, 0, 'O'},
-    {"segment_length", required_argument, 0, 'L'},
+    {"segment-offset", required_argument, 0, 'O'},
+    {"segment-length", required_argument, 0, 'L'},
+    {"sample-blocks", required_argument, 0, 'S'},
+    {"entropy-algorithm", optional_argument, 0, 'E'},
+    {"processing-block-size", required_argument, 0, 'B'},
     {0,0,0,0}
   };
 
@@ -43,15 +53,18 @@ Options::Options(int argc, char* argv[]) {
   _swap_bytes = false;
   _quiet = false;
   _append = false;
-  _block_size = 32768;
+  _entropy_algorithm = none;
+  _block_size = DEFAULT_BLOCK_SIZE;
+  _processing_block_size = DEFAULT_PROCESSING_BLOCK_SIZE;
   _segment_length = 0;
   _segment_offset = 0;
+  _sample_blocks = 1;
   _length = -1;
   _end = 0;
   _search_bytes = new char[0];
   _search_bytes_length = 0;
   while (1) {
-    option_character = getopt_long(argc, argv, "ho:b:l:e:sqac:f:O:L:", long_options, &option_index);
+    option_character = getopt_long(argc, argv, "ho:b:l:e:sqac:f:O:L:S:E::B:", long_options, &option_index);
     if( option_character == -1) break;
     switch(option_character) {
       case 'o':
@@ -93,6 +106,15 @@ Options::Options(int argc, char* argv[]) {
       case 'L':
         _segment_length = bytesize(optarg);
         break;
+      case 'S':
+        _sample_blocks = bytesize(optarg);
+        break;
+      case 'E':
+        _entropy_algorithm = (optarg != NULL) && strcmp(optarg, "log") ? logarithmic : nulls;
+        break;
+      case 'B':
+        _processing_block_size = bytesize(optarg);
+        break;
       case 'h':
         throw std::runtime_error("help");
       default:
@@ -103,18 +125,32 @@ Options::Options(int argc, char* argv[]) {
   if (tailing_arguments !=2 ) throw std::runtime_error("Please provide input and output");
   _input_filename = argv[optind];
   _output_filename = argv[optind+1];
-
-
 }
 
 /* Checks if the passed arguments are valid */
 /* return: empty string if everything is valid */
 std::string Options::check_arguments() {
+  int64_t file_size = input_file_size();
+  if (file_size < 0)
+  {
+    return "Could not open input file";
+  }
+
   if (_end != 0) {
     if (_end <= _offset) {
       return "End needs to be bigger than offset";
     }
+    if (_end > file_size) {
+      return "End should not be bigger than the filesize";
+    }
     _length = _end - _offset;
+  }
+
+  // if length is not set, read the entire file!
+  if (_length == -1)
+  {
+    _length = file_size - _offset;
+    printf("Warning: length was changed to: %lld \n", _length);
   }
 
   if (_swap_bytes) {
@@ -129,12 +165,41 @@ std::string Options::check_arguments() {
     }
   }
 
+  if (_sample_blocks > 1) {
+    if (_block_size != DEFAULT_BLOCK_SIZE) {
+      return "When using the option to sample, you should not overrule the blocksize";
+    }
+    _block_size = _processing_block_size;
+  }
+
   if (_block_size < 64) {
     return "The minimum block-size is 64 bytes";
   }
+
+  if (_block_size % _processing_block_size != 0){
+    if (_processing_block_size > _block_size){
+      if (_processing_block_size != DEFAULT_PROCESSING_BLOCK_SIZE)
+      {
+        return "The processing blocksize must be bigger than the (reading) blocksize";
+      }
+      _processing_block_size = _block_size;
+    } else {
+      return "The blocksize should always be a multiple of the processing blocksize";
+    }
+  }
+
   return "";
 }
 
+int64_t Options::input_file_size(){
+  if (_input_filename.empty()) return -1;
+  FILE* file = fopen(_input_filename.c_str(), "rb");
+  if(!file) return -1;
+  fseek(file, 0, SEEK_END);
+  int64_t file_size = ftell(file);
+  fclose(file);
+  return file_size;
+}
 
 /* Setters */
 void Options::set_length(int64_t length) {
@@ -168,10 +233,13 @@ std::string Options::input_filename() { return _input_filename; }
 std::string Options::output_filename(){ return _output_filename; }
 char* Options::search_bytes(){ return _search_bytes; }
 int64_t Options::block_size() { return _block_size; }
+int64_t Options::processing_block_size() { return _processing_block_size; }
 int64_t Options::offset() { return _offset; }
 int64_t Options::length() { return _length; }
+int64_t Options::sample_blocks() { return _sample_blocks; }
 int64_t Options::segment_offset() { return _segment_offset; }
 int64_t Options::segment_length() { return _segment_length; }
+EntropyAlgorithm Options::entropy_algorithm() { return _entropy_algorithm; }
 bool Options::swap_bytes() { return _swap_bytes; }
 bool Options::quiet() { return _quiet; }
 bool Options::append() { return _append; }

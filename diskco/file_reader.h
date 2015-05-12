@@ -19,7 +19,6 @@ class FileReader: public BufferProcessor {
 private:
   int64_t _bytes_left;
   int64_t _cursor;
-  int64_t _file_size;
   FILE* _file;
   Progress* _progress;
 public:
@@ -29,6 +28,6 @@ public:
   int64_t cursor();
   void close();
   void initialize();
-  void initialize(int64_t offset, int64_t length);  
+  void initialize(int64_t offset, int64_t length);
 };
 #endif /* defined(__Diskco__file_reader__) */

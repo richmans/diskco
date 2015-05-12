@@ -9,6 +9,7 @@
 #include "file_reader.h"
 #include "file_writer.h"
 #include "byte_swapper.h"
+#include "entropy_mapper.h"
 #include "buffer_pool.h"
 #include "searcher.h"
 class Diskco {
@@ -18,6 +19,7 @@ private:
   FileReader *_reader;
   ByteSwapper *_swapper;
   Searcher *_searcher;
+  EntropyMapper *_entropy;
   FileWriter *_writer;
   BufferPool* _pool;
   BufferProcessor* _chain_end;

@@ -7,21 +7,29 @@
 #include <getopt.h>
 #include <cstring>
 #include "utils.h"
+
+enum EntropyAlgorithm {none, nulls, logarithmic};
+
 class Options {
 private:
   std::string _input_filename;
   std::string _output_filename;
   int64_t _block_size;
+  int64_t _processing_block_size;
   int64_t _offset;
   int64_t _length;
   int64_t _end;
+  int64_t _sample_blocks;
   bool _swap_bytes;
   char* _search_bytes;
   int _search_bytes_length;
+  EntropyAlgorithm _entropy_algorithm;
   bool _quiet;
   bool _append;
   int64_t _segment_offset;
   int64_t _segment_length;
+
+  int64_t input_file_size();
 public:
   Options(int argc, char* argv[]);
   Options(char* input, char* output, bool append, bool byteswap);
@@ -37,10 +45,13 @@ public:
   char* search_bytes();
   int search_bytes_length();
   int64_t block_size();
+  int64_t processing_block_size();
   int64_t offset();
   int64_t length();
+  int64_t sample_blocks();
   int64_t segment_offset();
   int64_t segment_length();
+  EntropyAlgorithm entropy_algorithm();
   bool swap_bytes();
   bool quiet();
   bool append();

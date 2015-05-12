@@ -4,6 +4,7 @@
 //
 //  Created by Richard Bronkhorst on 23/03/15.
 //  Copyright (c) 2015 Richard Bronkhorst. All rights reserved.
+//  Copyright (c) 2015 Martin van Wingerden All rights reserved.
 //
 
 #include "searcher.h"

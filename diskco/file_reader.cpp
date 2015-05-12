@@ -10,8 +10,6 @@
 FileReader::FileReader(Options* options, BufferProcessor* parent, BufferPool* pool) : BufferProcessor(options, parent, pool) {
   _file = fopen(options->input_filename().c_str(), "rb");
   if(!_file) throw std::runtime_error("Could not open input file");
-  fseek(_file, 0, SEEK_END);
-  _file_size = ftell(_file);
   _progress = NULL;
   initialize();
 };
@@ -33,11 +31,9 @@ void FileReader::initialize() {
 void FileReader::initialize(int64_t offset, int64_t length){
   fseek(_file, offset, SEEK_SET);
   _cursor = offset;
-  // if length is not set, read the entire file!
-  if (length == -1) length = _file_size - offset;
   _bytes_left = length;
   if(_progress) delete _progress;
-  _progress = new Progress(offset, offset + length);  
+  _progress = new Progress(offset, offset + length);
 }
 
 FileReader::~FileReader() {
@@ -49,7 +45,7 @@ Buffer* FileReader::next_buffer() {
   if(feof(_file) || _bytes_left == 0) return NULL;
   Buffer* buffer= _pool->get_buffer();
   int64_t read_bytes = buffer->capacity();
-  
+
   if (_bytes_left < read_bytes) read_bytes = _bytes_left;
   size_t bytes_read = fread(buffer->buffer(), 1, read_bytes, _file);
   buffer->set_size(bytes_read);
@@ -60,6 +56,6 @@ Buffer* FileReader::next_buffer() {
   return buffer;
 }
 
-int64_t FileReader::cursor() { 
+int64_t FileReader::cursor() {
   return _cursor;
 }
