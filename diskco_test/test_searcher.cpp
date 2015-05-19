@@ -13,7 +13,7 @@ TEST_CASE("Testing searcher") {
   const char* args[] = {"-q", "-f", "0001", "-O", "0", "-L", "3", "/tmp/test_diskco.dat", "dat"};
   Options* options = parse_options(9, args);
 
-  
+
   SECTION("Does a search and finds a result at pos 0") {
     FileReader* parent = new FileReader(options, NULL, pool);
     Searcher* searcher = new Searcher(options, parent, pool);
@@ -26,7 +26,7 @@ TEST_CASE("Testing searcher") {
     pool->release_buffer(buffer);
     delete parent;
   }
-  
+
   SECTION("Does a search, finds nothing, returns NULL") {
     FileReader* parent = new FileReader(options, NULL, pool);
     options->set_search_bytes("\x04\x07");
@@ -47,7 +47,7 @@ TEST_CASE("Testing searcher") {
     pool->release_buffer(buffer);
     delete parent;
   }
-  
+
   SECTION("Does not find an incomplete pattern") {
     FileReader* parent = new FileReader(options, NULL, pool);
     options->set_search_bytes("\xFE\xFF\x03");
@@ -56,13 +56,14 @@ TEST_CASE("Testing searcher") {
     CHECK(buffer == NULL);
     delete parent;
   }
-  
-  
+
+
   SECTION("Finds a result on a block boundary") {
     mock_input_file("/tmp/test_diskco.dat",512);
+    options = parse_options(9, args);
     FileReader* parent = new FileReader(options, NULL, pool);
     options->set_search_bytes(std::string("\xFE\xFF\x00\x01", 4));
-    
+
     Searcher* searcher = new Searcher(options, parent, pool);
     Buffer* buffer = searcher->next_buffer();
     CHECK(buffer != NULL);
@@ -75,8 +76,8 @@ TEST_CASE("Testing searcher") {
     }
     delete parent;
   }
-  
-  
+
+
   delete options;
   delete pool;
 }

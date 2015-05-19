@@ -15,7 +15,7 @@ Progress::Progress(int64_t min, int64_t max){
   gettimeofday(&_last_progress, NULL);
   _interval = 0.5;
   _last_cursor = min;
-  _last_speed = "0 b/s";
+  _last_speed = "0 B/s";
 };
 
 void Progress::set_status(std::string status){
@@ -38,7 +38,7 @@ void Progress::print(){
   struct timeval current;
   gettimeofday(&current, NULL);
   double elapsed = ((double)current.tv_sec + (double)current.tv_usec / 1000000) - ((double)_last_progress.tv_sec + (double)_last_progress.tv_usec / 1000000);
-  
+
   gettimeofday(&_last_progress, NULL);
   //printf("Clock %lf, cursor %lld\n", elapsed, processed);
   //printf("Elapsed %d\n", elapsed);

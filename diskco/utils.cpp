@@ -41,21 +41,21 @@ char* hextobytes(const char* hex){
 
 std::string pretty_bytes(int64_t bytes) {
   char result[30];
-  std::string unit = " b";
+  std::string unit = " B";
   if (bytes >= 1024) {
-    unit = "Kb";
+    unit = "KB";
     bytes = bytes >> 10;
   }
   if (bytes >= 1024) {
-    unit = "Mb";
+    unit = "MB";
     bytes = bytes >> 10;
   }
   if (bytes >= 1024) {
-    unit = "Gb";
+    unit = "GB";
     bytes = bytes >> 10;
   }
   if (bytes >= 1024) {
-    unit = "Tb";
+    unit = "TB";
     bytes = bytes >> 10;
   }
   sprintf(result, "%lld %s", bytes, unit.c_str());

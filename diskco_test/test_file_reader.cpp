@@ -10,12 +10,13 @@
 TEST_CASE("Testing filereader") {
   BufferPool* pool = new BufferPool(256,512);
   const char* args[] = {"-q", "/tmp/test_diskco.dat", "dat"};
-  Options* options = parse_options(3, args);
-  
+  Options* options = NULL;
+
   SECTION("Reads one buffer") {
     mock_input_file("/tmp/test_diskco.dat", 512);
+    options = parse_options(3, args);
     FileReader* reader = new FileReader(options, NULL, pool);
-    
+
     Buffer* buffer = reader->next_buffer();
     CHECK(buffer->buffer()[0] == 0);
     CHECK(buffer->buffer()[1] == 1);
@@ -26,9 +27,10 @@ TEST_CASE("Testing filereader") {
     CHECK(reader->next_buffer() == NULL);
     delete reader;
   }
-  
+
   SECTION("Reads a partial buffer") {
     mock_input_file("/tmp/test_diskco.dat", 513);
+    options = parse_options(3, args);
     FileReader* reader = new FileReader(options, NULL, pool);
     Buffer* buffer = reader->next_buffer();
     CHECK(buffer->buffer()[0] == 0);
@@ -44,9 +46,10 @@ TEST_CASE("Testing filereader") {
     CHECK(reader->next_buffer() == NULL);
     delete reader;
   }
-  
+
   SECTION("Reads at an offset") {
     mock_input_file("/tmp/test_diskco.dat", 513);
+    options = parse_options(3, args);
     const char* args[] = {"-o", "2", "-l", "3", "-q", "/tmp/test_diskco.dat", "dat"};
     Options* options2 = parse_options(7, args);
     FileReader* reader = new FileReader(options2, NULL, pool);

@@ -110,7 +110,7 @@ Options::Options(int argc, char* argv[]) {
         _sample_blocks = bytesize(optarg);
         break;
       case 'E':
-        _entropy_algorithm = (optarg != NULL) && strcmp(optarg, "log") ? logarithmic : nulls;
+        _entropy_algorithm = (optarg != NULL && strcmp(optarg, "log") == 0) ? logarithmic : nulls;
         break;
       case 'B':
         _processing_block_size = bytesize(optarg);
@@ -122,9 +122,16 @@ Options::Options(int argc, char* argv[]) {
     }
   }
   int tailing_arguments = argc - optind;
+
+  printf("We have argc: %d and optind %d\n", argc, optind);
+
   if (tailing_arguments !=2 ) throw std::runtime_error("Please provide input and output");
   _input_filename = argv[optind];
   _output_filename = argv[optind+1];
+
+  // Do a first initial check, note that some
+  // some other fields are prefilled.
+  check_arguments();
 }
 
 /* Checks if the passed arguments are valid */
@@ -150,7 +157,7 @@ std::string Options::check_arguments() {
   if (_length == -1)
   {
     _length = file_size - _offset;
-    printf("Warning: length was changed to: %lld \n", _length);
+    //printf("Warning: length was changed to: %lld \n", _length);
   }
 
   if (_swap_bytes) {
@@ -166,7 +173,7 @@ std::string Options::check_arguments() {
   }
 
   if (_sample_blocks > 1) {
-    if (_block_size != DEFAULT_BLOCK_SIZE) {
+    if (_block_size != DEFAULT_BLOCK_SIZE && _block_size != _processing_block_size) {
       return "When using the option to sample, you should not overrule the blocksize";
     }
     _block_size = _processing_block_size;

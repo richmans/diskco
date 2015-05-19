@@ -16,12 +16,12 @@ TEST_CASE("Testing utils") {
 
   SECTION("pretty_byte") {
     INFO("Converting number of bytes to pretty text")
-    CHECK(pretty_bytes(1) == "1  b");
-    CHECK(pretty_bytes(1024) == "1 Kb");
-    CHECK(pretty_bytes(1029) == "1 Kb");
-    CHECK(pretty_bytes(1024*1024) == "1 Mb");
-    CHECK(pretty_bytes(1024*1024*1024) == "1 Gb");
-    CHECK(pretty_bytes(int64_t(1024)*1024*1024*1024) == "1 Tb");
+    CHECK(pretty_bytes(1) == "1  B");
+    CHECK(pretty_bytes(1024) == "1 KB");
+    CHECK(pretty_bytes(1029) == "1 KB");
+    CHECK(pretty_bytes(1024*1024) == "1 MB");
+    CHECK(pretty_bytes(1024*1024*1024) == "1 GB");
+    CHECK(pretty_bytes(int64_t(1024)*1024*1024*1024) == "1 TB");
   }
 
   SECTION("hextobytes") {
