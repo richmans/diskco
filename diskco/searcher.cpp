@@ -10,6 +10,7 @@
 #include "searcher.h"
 Searcher::Searcher(Options* options, BufferProcessor* parent, BufferPool* pool) : BufferProcessor(options, parent, pool) {
   _current_input_buffer = NULL;
+  _current_output_reader = NULL;
   initialize();
 };
 
@@ -33,7 +34,6 @@ void Searcher::initialize() {
   if(_current_input_buffer != NULL) _pool->release_buffer(_current_input_buffer);
   _current_input_buffer = NULL;
   _current_input_size = 0;
-  _current_output_reader = NULL;
   _reading_result = false;
 
   _match_size = _options->search_bytes_length();
@@ -99,7 +99,7 @@ bool Searcher::process_char(char input){
 
       return true;
     }
-  } else if (_match_cursor > 1) {
+  } else if (_match_cursor > 0) {
     //printf("Mismatch, reseting match cursor, updated from %d to %d on char: %c\n ", _match_cursor, _failure_map[_match_cursor - 1], input);
     _match_cursor = _failure_map[_match_cursor - 1];
     // reprocess the current position

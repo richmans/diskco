@@ -140,7 +140,7 @@ std::string Options::check_arguments() {
   int64_t file_size = input_file_size();
   if (file_size < 0)
   {
-    return "Could not open input file";
+    return "Could not open input file, file size < 0";
   }
 
   if (_end != 0) {

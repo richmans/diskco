@@ -41,11 +41,6 @@ void EntropyMapper::initialize() {
 
   // initialize the histo_map
   for (int i = 0; i < 256; i++) _histo_map[i] = 0;
-  printf("Address of array: %u & size=%d\n", _histo_map, sizeof(_histo_map));
-  printf("Address of this: %u & size=%d\n", this, sizeof(*this));
-
-  //memset(_histo_map, 0, sizeof(_histo_map));
-  for (int i = 0; i < 17; i++) printf("init var[%d] = %d\n", i, _histo_map[i]);
 }
 
 void EntropyMapper::fetch_next_buffer() {
@@ -78,12 +73,7 @@ void EntropyMapper::process_entropy()
   _current_output_buffer->set_size(location + 1);
 
   _zeroes = 0;
-
-  for (int i = 0; i < 17; i++) printf("var[%qd] = %d\n", i, _histo_map[i]);
   for (int i = 0; i < 256; i++) _histo_map[i] = 0;
-  //memset(_histo_map, 0, sizeof(_histo_map));
-  for (int i = 0; i < 17; i++) printf("var[%d] = %d\n", i, _histo_map[i]);
-  exit(3);
 
   _output_cursor_step++;
 }
@@ -132,15 +122,11 @@ void EntropyMapper::process_input_buffer() {
   int block_cursor = 0;
   char* data = _current_input_buffer->buffer();
 
-  for (int i = 0; i < 17; i++) printf("before var[%d] = %d\n", i, _histo_map[i]);
-
   while (_entropy_cursor < _current_input_size) {
 
     if (count_zeroes){
-      printf(".");
       if (data[_entropy_cursor] == 0) _zeroes++;
     } else {
-      printf("counting %hhu\n", (unsigned char)data[_entropy_cursor]);
       _histo_map[(unsigned char)data[_entropy_cursor]] += 1;
     }
 
@@ -181,8 +167,6 @@ Buffer* EntropyMapper::write_header() {
   // the header length is 32 bytes
   output_buffer->set_size(32);
 
-  for (int i = 0; i < 17; i++) printf("write_header 2 var[%d] = %d\n", i, _histo_map[i]);
-
   return output_buffer;
 }
 
@@ -195,8 +179,6 @@ bool EntropyMapper::will_an_extra_input_buffer_fit()
 }
 
 Buffer* EntropyMapper::next_buffer() {
-  for (int i = 0; i < 17; i++) printf("next_buffy var[%d] = %d\n", i, _histo_map[i]);
-
   if (_header_written == false) {
     _header_written = true;
     return write_header();

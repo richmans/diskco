@@ -9,7 +9,7 @@
 #include "file_reader.h"
 FileReader::FileReader(Options* options, BufferProcessor* parent, BufferPool* pool) : BufferProcessor(options, parent, pool) {
   _file = fopen(options->input_filename().c_str(), "rb");
-  if(!_file) throw std::runtime_error("Could not open input file");
+  if(!_file) throw std::runtime_error("Could not open input file from FileReader");
   _progress = NULL;
   initialize();
 };
