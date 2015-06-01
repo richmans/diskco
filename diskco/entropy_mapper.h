@@ -10,9 +10,9 @@
 #define __Diskco__entropy_mapper__
 
 #include <stdio.h>
-#include <stdint.h>
 #include <string>
 #include <stdexcept>
+#include "types.h"
 #include "buffer_processor.h"
 #include "file_reader.h"
 class EntropyMapper: public BufferProcessor {

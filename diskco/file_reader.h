@@ -10,8 +10,8 @@
 #define __Diskco__file_reader__
 
 #include <stdio.h>
-#include <stdint.h>
 #include <stdexcept>
+#include "types.h"
 #include "buffer_processor.h"
 #include "progress.h"
 

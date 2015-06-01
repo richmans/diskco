@@ -11,9 +11,9 @@
 #define __Diskco__searcher__
 
 #include <stdio.h>
-#include <stdint.h>
 #include <string>
 #include <stdexcept>
+#include "types.h"
 #include "buffer_processor.h"
 #include "file_reader.h"
 class Searcher: public BufferProcessor {

@@ -10,7 +10,7 @@
 #define __Diskco__buffer__
 #include <stdio.h>
 #include <stdlib.h>
-
+#include "types.h"
 class Buffer {
 private:
   char* _buffer;
@@ -26,6 +26,6 @@ public:
   int64_t size();
   int64_t capacity();
   char* buffer();
- 
+
 };
 #endif /* defined(__Diskco__buffer__) */
