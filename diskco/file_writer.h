@@ -11,7 +11,7 @@
 
 #include <stdio.h>
 #include <stdexcept>
-#include "types.h"
+#include <stdint.h>
 #include "buffer_processor.h"
 class FileWriter: public BufferProcessor {
 private:
