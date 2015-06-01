@@ -123,8 +123,6 @@ Options::Options(int argc, char* argv[]) {
   }
   int tailing_arguments = argc - optind;
 
-  printf("We have argc: %d and optind %d\n", argc, optind);
-
   if (tailing_arguments !=2 ) throw std::runtime_error("Please provide input and output");
   _input_filename = argv[optind];
   _output_filename = argv[optind+1];
