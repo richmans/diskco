@@ -13,7 +13,10 @@ SOURCES=buffer.cpp \
 				searcher.cpp \
 				utils.cpp
 CFLAGS=-c -Wall
-LFLAGS=-static
+LFLAGS=
+ifeq ($(OS),Windows_NT)
+	LFLAGS += -static
+endif
 OBJECTS=$(patsubst %.cpp, build/%.o, $(SOURCES))
 #OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=build/diskco
