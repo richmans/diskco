@@ -13,6 +13,7 @@ SOURCES=buffer.cpp \
 				searcher.cpp \
 				utils.cpp
 CFLAGS=-c -Wall
+LFLAGS=-static
 OBJECTS=$(patsubst %.cpp, build/%.o, $(SOURCES))
 #OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=build/diskco
@@ -26,7 +27,7 @@ install: $(EXECUTABLE)
 	install build/diskco $(INSTALL_DIR)
 
 $(EXECUTABLE): build $(OBJECTS)
-	$(CC) $(OBJECTS) -o $@
+	$(CC) $(LFLAGS) $(OBJECTS) -o $@
 
 build/%.o: %.cpp
 	$(CC) $(CFLAGS) -o $@ $<
