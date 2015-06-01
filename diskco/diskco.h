@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdexcept>
 #include <string.h>
-#include "types.h"
+#include <stdint.h>
 #include "options.h"
 #include "buffer.h"
 #include "file_reader.h"

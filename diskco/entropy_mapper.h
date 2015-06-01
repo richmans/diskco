@@ -12,7 +12,7 @@
 #include <stdio.h>
 #include <string>
 #include <stdexcept>
-#include "types.h"
+#include <stdint.h>
 #include "buffer_processor.h"
 #include "file_reader.h"
 class EntropyMapper: public BufferProcessor {
