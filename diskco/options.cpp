@@ -2,7 +2,10 @@
 
 #define DEFAULT_BLOCK_SIZE 32768
 #define DEFAULT_PROCESSING_BLOCK_SIZE 512
-
+#ifdef __MINGW32__
+#define ftello ftello64
+#define fseeko fseeko64
+#endif
 Options::Options(char* input, char* output, bool append, bool byteswap) {
    _input_filename = input;
    _output_filename = output;
@@ -200,8 +203,8 @@ int64_t Options::input_file_size(){
   if (_input_filename.empty()) return -1;
   FILE* file = fopen(_input_filename.c_str(), "rb");
   if(!file) return -1;
-  fseek(file, 0, SEEK_END);
-  int64_t file_size = ftell(file);
+  fseeko(file, 0, SEEK_END);
+  int64_t file_size = ftello(file);
   fclose(file);
   return file_size;
 }
