@@ -23,7 +23,7 @@ private:
   int64_t _current_input_size;
   bool _header_written;
   int _output_cursor_step;
-  uint32_t _entropy;
+  double _entropy;
   int _zeroes;
   int* _histo_map;
 

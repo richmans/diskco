@@ -96,6 +96,8 @@ int EntropyMapper::calculate_entropy(){
 
     for (int i = 0; i < 256; i++)
     {
+      if (_histo_map[i] == 0) continue;
+
       double p = (double)_histo_map[i] / (double)blocksize;
       if (p > 0.0){
         _entropy -= p * log2(p);
