@@ -17,11 +17,6 @@
 #include "buffer_processor.h"
 #include "progress.h"
 
-#ifndef fseeko
-#define fseeko fseeko64
-#define ftello ftello64
-#endif
-
 class FileReader: public BufferProcessor {
 private:
   int64_t _bytes_left;
