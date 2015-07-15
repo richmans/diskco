@@ -10,6 +10,10 @@
 #define __Diskco__file_reader__
 
 #define _FILE_OFFSET_BITS 64
+#ifndef fseeko
+#define fseeko fseeko64
+#define ftello ftello64
+#endif
 
 #include <stdio.h>
 #include <stdexcept>
