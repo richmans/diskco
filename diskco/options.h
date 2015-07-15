@@ -10,10 +10,12 @@
 #include <getopt.h>
 #include <cstring>
 #include "utils.h"
+
 #ifndef fseeko
 #define fseeko fseeko64
 #define ftello ftello64
 #endif
+
 enum EntropyAlgorithm {none, nulls, logarithmic};
 
 class Options {
