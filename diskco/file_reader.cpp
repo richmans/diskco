@@ -5,7 +5,6 @@
 //  Created by Richard Bronkhorst on 23/03/15.
 //  Copyright (c) 2015 Richard Bronkhorst. All rights reserved.
 //
-
 #include "file_reader.h"
 FileReader::FileReader(Options* options, BufferProcessor* parent, BufferPool* pool) : BufferProcessor(options, parent, pool) {
   _file = fopen(options->input_filename().c_str(), "rb");
@@ -29,7 +28,7 @@ void FileReader::initialize() {
 }
 
 void FileReader::initialize(int64_t offset, int64_t length){
-  fseek(_file, offset, SEEK_SET);
+  fseeko(_file, offset, SEEK_SET);
   _cursor = offset;
   _bytes_left = length;
   if(_progress) delete _progress;

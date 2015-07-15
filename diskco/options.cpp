@@ -2,10 +2,7 @@
 
 #define DEFAULT_BLOCK_SIZE 32768
 #define DEFAULT_PROCESSING_BLOCK_SIZE 512
-#ifdef __MINGW32__
-#define ftello ftello64
-#define fseeko fseeko64
-#endif
+
 Options::Options(char* input, char* output, bool append, bool byteswap) {
    _input_filename = input;
    _output_filename = output;
@@ -142,6 +139,11 @@ std::string Options::check_arguments() {
   if (file_size < 0)
   {
     return "Could not open input file, file size < 0";
+  }
+
+  if (_offset > file_size)
+  {
+    return "Offset should not be bigger than the filesize";
   }
 
   if (_end != 0) {
