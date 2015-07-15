@@ -9,6 +9,8 @@
 #ifndef __Diskco__file_reader__
 #define __Diskco__file_reader__
 
+#define _FILE_OFFSET_BITS 64
+
 #include <stdio.h>
 #include <stdexcept>
 #include <stdint.h>

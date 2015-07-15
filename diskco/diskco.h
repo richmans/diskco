@@ -12,6 +12,7 @@
 #include "entropy_mapper.h"
 #include "buffer_pool.h"
 #include "searcher.h"
+
 class Diskco {
 private:
   void get_options(int argc, char* argv[]);

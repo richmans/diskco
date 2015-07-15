@@ -1,5 +1,8 @@
 #ifndef OPTIONS_H
 #define OPTIONS_H
+
+#define _FILE_OFFSET_BITS 64
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdexcept>
